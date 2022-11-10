@@ -2,20 +2,14 @@ package src.controllers;
 
 import javax.swing.JTree;
 import javax.swing.UIManager;
-import javax.swing.GroupLayout.Group;
 import javax.swing.text.Position;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-
 import src.utils.entity.User;
 import src.utils.entity.UserGroup;
-import src.utils.message.Tweet;
-
 import java.awt.Component;
-import java.util.ArrayList;
-import java.util.Collections;
 
 public class EntityTree extends JTree {
 	public EntityTree(UserGroup rootGroup) {
