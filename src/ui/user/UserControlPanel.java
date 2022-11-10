@@ -18,7 +18,7 @@ import java.util.Set;
 
 import src.controllers.AdminController;
 import src.utils.entity.User;
-import src.utils.messages.Tweet;
+import src.utils.message.Tweet;
 import src.utils.observer.Observer;
 
 public class UserControlPanel extends JPanel implements Observer {

@@ -34,4 +34,16 @@ public class AdminController {
 	public ActionListener openUserAction() {
 		return this.model.openUserAction();
 	}
+
+	public ActionListener getUserCount() {
+		return this.model.getUserCount();
+	}
+
+	public ActionListener getGroupCount() {
+		return this.model.getGroupCount();
+	}
+
+	public ActionListener getMessageCount() {
+		return this.model.getMessageCount();
+	}
 }

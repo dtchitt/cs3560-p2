@@ -97,17 +97,18 @@ public class AdminControlPanel extends JPanel {
 		layout.setConstraints(panel, constraints);
 		this.add(panel);
 
-		JButton buttonOne = new JButton("Show User Total");
-		JButton buttonTwo = new JButton("Show Group Total");
-		JButton buttonThree = new JButton("Show Message Total");
-		JButton buttonFour = new JButton("Show Positive Percentage");
-		JButton buttonFive = new JButton("Validate Entities");
-		JButton buttonSix = new JButton("Get Last Updated User");
-		panel.add(buttonSix);
-		panel.add(buttonFive);
-		panel.add(buttonFour);
-		panel.add(buttonThree);
-		panel.add(buttonTwo);
-		panel.add(buttonOne);
+		JButton b1 = new JButton("Show User Total");
+		b1.addActionListener((AdminController.get().getUserCount()));
+		JButton b2 = new JButton("Show Group Total");
+		JButton b3 = new JButton("Show Message Total");
+		JButton b4 = new JButton("Show Positive Percentage");
+		//JButton b5 = new JButton("Validate Entities");
+		//JButton b6 = new JButton("Get Last Updated User");
+		//panel.add(b6);
+		//panel.add(b5);
+		panel.add(b4);
+		panel.add(b3);
+		panel.add(b2);
+		panel.add(b1);
 	}
 }

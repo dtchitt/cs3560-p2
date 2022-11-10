@@ -79,6 +79,20 @@ public class AdminModel {
 		};
 	}
 
+	public ActionListener getUserCount() {
+		return event -> {
+
+		};
+	}
+
+	public ActionListener getGroupCount() {
+		return null;
+	}
+
+	public ActionListener getMessageCount() {
+		return null;
+	}
+
 	private boolean validateUniqueID(String str) {
 		boolean result = true;
 		str = str.trim();

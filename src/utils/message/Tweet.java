@@ -1,4 +1,4 @@
-package src.utils.messages;
+package src.utils.message;
 
 import src.utils.entity.User;
 

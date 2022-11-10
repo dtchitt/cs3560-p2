@@ -3,7 +3,7 @@ package src.utils.observer;
 import java.util.ArrayList;
 import java.util.List;
 
-import src.utils.messages.Tweet;
+import src.utils.message.Tweet;
 
 public class Feed extends Subject {
 	private List<Tweet> tweets;
