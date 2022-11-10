@@ -1,5 +1,7 @@
 package src.utils.visitor;
 
-public class Visitor {
-	
+import src.utils.message.Tweet;
+
+public interface Visitor {
+	public boolean visit(Tweet tweet);
 }

@@ -166,7 +166,7 @@ public class UserControlPanel extends JPanel implements Observer {
 		button.addActionListener(event -> {
 			try {
 				Tweet tweet = new Tweet(inputArea.getText(), this.user);
-				this.user.getFeed().addTweet(tweet);
+				this.user.tweet(tweet);
 				inputArea.setText(defaultString);
 				this.update();
 			} catch (Exception e) {
@@ -196,10 +196,10 @@ public class UserControlPanel extends JPanel implements Observer {
 	private void updateFeed() {
 		String feed = "Feed:\n";
 
-		List<Tweet> tweets = this.user.getFeed().getTweets();
+		List<Tweet> tweets = this.user.getTweets();
 
 		for (User u : this.user.getFollowing()) {
-			for (Tweet uTweet : u.getFeed().getTweets()) {
+			for (Tweet uTweet : u.getTweets()) {
 				if (this.user.getFollowing().contains(uTweet.getUser())) {
 					tweets.add(uTweet);
 				}
@@ -213,7 +213,7 @@ public class UserControlPanel extends JPanel implements Observer {
 		tweets.addAll(uniqueTweets);
 
 		Collections.reverse(tweets);
-		for (Tweet tweet : this.user.getFeed().getTweets()) {
+		for (Tweet tweet : this.user.getTweets()) {
 			feed += tweet.format() + "\n";
 		}
 

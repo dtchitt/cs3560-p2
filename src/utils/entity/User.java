@@ -5,6 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import src.utils.message.Tweet;
 import src.utils.observer.Feed;
 
 public class User extends Entity {
@@ -52,7 +53,19 @@ public class User extends Entity {
 		return result;
 	}
 
+	public void tweet(Tweet tweet) {
+		this.feed.addTweet(tweet);
+	}
+
+	public List<Tweet> getTweets() {
+		return this.feed.getTweets();
+	}
+
 	public Feed getFeed() {
-		return feed;
+		return this.feed;
+	}
+
+	public int getTweetCount() {
+		return this.getTweets().size();
 	}
 }

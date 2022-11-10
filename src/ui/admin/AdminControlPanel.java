@@ -99,16 +99,23 @@ public class AdminControlPanel extends JPanel {
 
 		JButton b1 = new JButton("Show User Total");
 		b1.addActionListener((AdminController.get().getUserCount()));
+		panel.add(b1);
+
 		JButton b2 = new JButton("Show Group Total");
+		b2.addActionListener((AdminController.get().getGroupCount()));
+		panel.add(b2);
+
 		JButton b3 = new JButton("Show Message Total");
+		b3.addActionListener((AdminController.get().getMessageCount()));
+		panel.add(b3);
+
 		JButton b4 = new JButton("Show Positive Percentage");
+		b4.addActionListener((AdminController.get().getPositivityPercent()));
+		panel.add(b4);
+
 		//JButton b5 = new JButton("Validate Entities");
 		//JButton b6 = new JButton("Get Last Updated User");
 		//panel.add(b6);
 		//panel.add(b5);
-		panel.add(b4);
-		panel.add(b3);
-		panel.add(b2);
-		panel.add(b1);
 	}
 }

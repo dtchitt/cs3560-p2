@@ -46,4 +46,8 @@ public class AdminController {
 	public ActionListener getMessageCount() {
 		return this.model.getMessageCount();
 	}
+
+	public ActionListener getPositivityPercent() {
+		return this.model.getPositivityPercent();
+	}
 }
