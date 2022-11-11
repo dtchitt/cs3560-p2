@@ -21,6 +21,11 @@ import src.utils.entity.User;
 import src.utils.message.Tweet;
 import src.utils.observer.Observer;
 
+/**
+ * Okay honestly I was rushing and this is really messy, sorry
+ * This is pretty much an all in one for user UI and logic.
+ * The control panel is what actually observes users feeds so it knows when to update
+ */
 public class UserControlPanel extends JPanel implements Observer {
 	private User user;
 	private JTextArea following;

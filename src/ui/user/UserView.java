@@ -8,6 +8,9 @@ import javax.swing.plaf.DimensionUIResource;
 
 import src.utils.entity.User;
 
+/**
+ * This creates the user view window when the open view button is clicked
+ */
 public class UserView extends JFrame {
 
 	public UserView(User user) {

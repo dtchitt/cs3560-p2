@@ -4,6 +4,9 @@ import javax.swing.JScrollPane;
 import javax.swing.plaf.DimensionUIResource;
 import src.controllers.AdminController;
 
+/**
+ * This is the class that holds the Jtree and makes it scrollable
+ */
 public class ScrollPane extends JScrollPane {
 	public ScrollPane() {
 		super();

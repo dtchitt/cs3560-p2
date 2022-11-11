@@ -15,6 +15,13 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.Color;
 
+/**
+ * This class is a servers as a JPanel that holds the admin control buttons and text area
+ * It is split into 3 sections, top, middle, & bottom.
+ * The top is entity control (add user/group & show user panel)
+ * The middle is empty
+ * The bottom is statistics reporting buttons 
+ */
 public class AdminControlPanel extends JPanel {
 	public AdminControlPanel() {
 		super();
@@ -64,18 +71,15 @@ public class AdminControlPanel extends JPanel {
 
 		inputArea.setPreferredSize(new DimensionUIResource(285, layout.rowHeights[0] / 4));
 		inputArea.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2, true));
-
+		//To help clean up the code the action listeners for buttons are sent to the controller, which then sends to the model
 		JPanel buttons = new JPanel();
 		JButton b1 = new JButton("Create Group");
-
 		b1.addActionListener(AdminController.get().addEntityAction(inputArea));
 		buttons.add(b1);
-
 		JButton b2 = new JButton("Create User");
 		b2.addActionListener(AdminController.get().addEntityAction(inputArea));
 		buttons.add(b2);
-
-		JButton b3 = new JButton("Open");
+		JButton b3 = new JButton("Open User");
 		b3.addActionListener(AdminController.get().openUserAction());
 		buttons.add(b3);
 

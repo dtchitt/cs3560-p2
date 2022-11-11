@@ -11,6 +11,9 @@ import src.utils.entity.User;
 import src.utils.entity.UserGroup;
 import java.awt.Component;
 
+/**
+ * The jtree that will contain the user and group nodes in the system.
+ */
 public class EntityTree extends JTree {
 	public EntityTree(UserGroup rootGroup) {
 		super();

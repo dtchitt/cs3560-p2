@@ -3,6 +3,10 @@ package src.utils.message;
 import src.utils.TimeStamp;
 import src.utils.entity.User;
 
+/**
+ * This class was made to help be more OOP, every message time will have a string, timestap, and user
+ * Every message (tweet,direct message) can extend this class
+ */
 public abstract class Message {
 	private String message;
 	private TimeStamp timeStamp;

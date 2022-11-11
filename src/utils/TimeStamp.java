@@ -5,7 +5,10 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-
+/**
+ * Timestamp is a general purpose that that can be used freely or with composition to give instances timestamps
+ * Creation time is final and cannot be modified
+ */
 public class TimeStamp {
 	private final long createStamp;
 	private long updateStamp;
@@ -37,6 +40,10 @@ public class TimeStamp {
 		return this.toLocalDateTime(date);
 	}
 
+	/**
+	 * @param date
+	 * @return the local time for the user view
+	 */
 	private String toLocalDateTime(Date date) {
 		LocalDateTime local = Instant.ofEpochMilli(date.getTime())
 				.atZone(ZoneId.systemDefault())

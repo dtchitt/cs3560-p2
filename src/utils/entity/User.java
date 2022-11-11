@@ -8,6 +8,11 @@ import java.util.Set;
 import src.utils.message.Tweet;
 import src.utils.observer.Feed;
 
+/**
+ * A user is an entity in the system.
+ * The user has a feed which contains tweets.
+ * The user has a SET of followers and following, this is to garuntee no duplicates
+ */
 public class User extends Entity {
 	private Set<User> followers;
 	private Set<User> following;

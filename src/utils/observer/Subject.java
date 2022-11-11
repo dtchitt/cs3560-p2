@@ -3,6 +3,9 @@ package src.utils.observer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A subject to be observed
+ */
 public abstract class Subject {
 	private List<Observer> observers;
 

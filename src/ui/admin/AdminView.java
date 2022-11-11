@@ -7,6 +7,11 @@ import javax.swing.JFrame;
 import javax.swing.JSplitPane;
 import javax.swing.plaf.DimensionUIResource;
 
+/**
+ * The main window of the program, which is the admin control panel.
+ * This class is composed of sub-frames. The sub frames allow the admin to
+ * control the program.
+ */
 public class AdminView extends JFrame {
 
 	public AdminView(String string) {
@@ -27,6 +32,12 @@ public class AdminView extends JFrame {
 		this.setVisible(true);
 	}
 
+	/**
+	 * *Originally, I had more here thats why it is its own function
+	 * This function builds the split frame
+	 * The left side is the tree view and the right side is the controls
+	 * @return
+	 */
 	private JSplitPane buildSplitPane() {
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);

@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 import src.utils.message.Tweet;
 
+/**
+ * Visitor that is used to validate tweets
+ */
 public class TweetPositivityVisitor implements Visitor {
 	public static final String[] POSITIVE_WORDS = {"awesome", "nice", "good", "love", "happy", "lit"};
 

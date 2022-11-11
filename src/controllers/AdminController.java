@@ -4,6 +4,12 @@ import java.awt.event.ActionListener;
 import src.models.AdminModel;
 import javax.swing.JTextField;
 
+/**
+ * This is a middleman class to help clean up my code
+ * AdminController is a singleton so it can be accessed globally.
+ * AdminController also holds the admin model which has the tree and rootgroup stored
+ * It can be used to  access the mmost important data from anywhere
+ */
 public class AdminController {
 	private static AdminController instance;
 	private final AdminModel model;
