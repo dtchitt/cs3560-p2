@@ -37,6 +37,7 @@ public class AdminModel {
 
 	/**
 	 * Logic for adding an entity to the system.
+	 * 
 	 * @param inputArea
 	 * @return
 	 */
@@ -49,10 +50,8 @@ public class AdminModel {
 				return;
 			}
 
-			Object object = this.tree.getSelectedObject();
-			if (EntityTree.nodeFromObject(object) instanceof User) {
-				object = EntityTree.nodeFromObject(object).getParent();
-			}
+			// get the node or its parent
+			Object object = getSelectedNode();
 
 			UserGroup rootGroup = this.rootGroup;
 			if (EntityTree.nodeFromObject(object) == null) {
@@ -78,13 +77,23 @@ public class AdminModel {
 		};
 	}
 
+	private Object getSelectedNode() {
+		Object object = this.tree.getLastSelectedPathComponent();
+
+		if (!EntityTree.nodeFromObject(object).getAllowsChildren()) {
+			object = EntityTree.nodeFromObject(object).getParent();
+		}
+		return object;
+	}
+
 	/**
 	 * Logic for opening a users view
+	 * 
 	 * @return
 	 */
 	public ActionListener openUserAction() {
 		return event -> {
-			Object object = this.tree.getSelectedObject();
+			Object object = this.tree.getLastSelectedPathComponent();
 
 			if (object instanceof User) {
 				new UserView((User) object);
@@ -97,6 +106,7 @@ public class AdminModel {
 
 	/**
 	 * Logic to get and return all users in the system
+	 * 
 	 * @param group
 	 * @return
 	 */
@@ -117,6 +127,7 @@ public class AdminModel {
 	/**
 	 * Logic to get and return all groups in the system
 	 * including root group
+	 * 
 	 * @param group
 	 * @return
 	 */
@@ -133,6 +144,7 @@ public class AdminModel {
 
 	/**
 	 * Logic to get user count
+	 * 
 	 * @return
 	 */
 	public ActionListener getUserCount() {
@@ -144,6 +156,7 @@ public class AdminModel {
 
 	/**
 	 * Logic to get group count
+	 * 
 	 * @return
 	 */
 	public ActionListener getGroupCount() {
@@ -155,6 +168,7 @@ public class AdminModel {
 
 	/**
 	 * logic to get message count
+	 * 
 	 * @return
 	 */
 	public ActionListener getMessageCount() {
@@ -172,6 +186,7 @@ public class AdminModel {
 
 	/**
 	 * logic to check tweets for positivity
+	 * 
 	 * @return
 	 */
 	public ActionListener getPositivityPercent() {
@@ -187,7 +202,7 @@ public class AdminModel {
 
 			for (Tweet tweet : tweets) {
 				if (tweet.accept(visitor)) {
-					count++;	
+					count++;
 				}
 			}
 
@@ -196,12 +211,15 @@ public class AdminModel {
 			count /= tweets.size();
 			count *= 100;
 
-			JOptionPane.showMessageDialog(null, "Tweet Positivity Percent: " + count, "", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Tweet Positivity Percent: " + count, "",
+					JOptionPane.INFORMATION_MESSAGE);
 		};
 	}
 
 	/**
-	 * validates entity entrys are correct, they can only contain numbers and letters
+	 * validates entity entrys are correct, they can only contain numbers and
+	 * letters
+	 * 
 	 * @param str
 	 * @return
 	 */

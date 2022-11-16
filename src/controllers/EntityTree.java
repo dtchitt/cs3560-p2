@@ -44,10 +44,6 @@ public class EntityTree extends JTree {
 		treeModel.nodesWereInserted(rootNode, new int[] { rootNode.getChildCount() - 1 });
 	}
 
-	public Object getSelectedObject() {
-		return this.getLastSelectedPathComponent();
-	}
-
 	public User getUser(String id) {
 		this.getModel().getChild(id, UNDEFINED_CONDITION);
 		TreePath path = this.getNextMatch(id, 0, Position.Bias.Forward);
