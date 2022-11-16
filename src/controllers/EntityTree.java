@@ -21,27 +21,11 @@ public class EntityTree extends JTree {
 		this.setModel(new DefaultTreeModel(rootGroup));
 		// Add Tom, good ol myspace
 		rootGroup.addUser(new User("Tom"));
-		this.getDefaultModel().nodesWereInserted(rootGroup, new int[] { rootGroup.getChildCount() - 1 });
+		//this.getDefaultModel().nodesWereInserted(rootGroup, new int[] { rootGroup.getChildCount() - 1 });
+		this.render(rootGroup);
 		this.expandPath(new TreePath(rootGroup.getPath()));
 
-		this.setCellRenderer(new DefaultTreeCellRenderer() {
-			@Override
-			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean isLeaf, int row, boolean hasFocus) {
-				Component result = super.getTreeCellRendererComponent(tree, value, isSelected, expanded, isLeaf, row, hasFocus);
-
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-
-				if (node instanceof UserGroup) {
-					this.setIcon(UIManager.getIcon("FileView.directoryIcon"));
-				}
-
-				if (node instanceof User) {
-					this.setIcon(UIManager.getIcon("FileView.fileIcon"));
-				}
-
-				return result;
-			}
-		});
+		this.setRenderer();
 	}
 
 	public static DefaultMutableTreeNode objectToNode(Object object) {
@@ -67,5 +51,29 @@ public class EntityTree extends JTree {
 	public User getUser(String id) {
 		TreePath path = this.getNextMatch(id, 0, Position.Bias.Forward);
 		return (User) EntityTree.treePathToNode(path);
+	}
+
+	/**
+	 * Set up the renderer that is used to draw node icons
+	 */
+	private void setRenderer() {
+		this.setCellRenderer(new DefaultTreeCellRenderer() {
+			@Override
+			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean isLeaf, int row, boolean hasFocus) {
+				Component result = super.getTreeCellRendererComponent(tree, value, isSelected, expanded, isLeaf, row, hasFocus);
+
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+
+				if (node instanceof UserGroup) {
+					this.setIcon(UIManager.getIcon("FileView.directoryIcon"));
+				}
+
+				if (node instanceof User) {
+					this.setIcon(UIManager.getIcon("FileView.fileIcon"));
+				}
+
+				return result;
+			}
+		});
 	}
 }
