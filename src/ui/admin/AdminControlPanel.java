@@ -1,7 +1,10 @@
 package src.ui.admin;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.plaf.DimensionUIResource;
@@ -13,16 +16,23 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.image.BufferedImage;
+import java.awt.Image;
+import java.io.File;
 import java.awt.Color;
 
 /**
- * This class is a servers as a JPanel that holds the admin control buttons and text area
+ * This class is a servers as a JPanel that holds the admin control buttons and
+ * text area
  * It is split into 3 sections, top, middle, & bottom.
  * The top is entity control (add user/group & show user panel)
  * The middle is empty
- * The bottom is statistics reporting buttons 
+ * The bottom is statistics reporting buttons
  */
 public class AdminControlPanel extends JPanel {
+	private final Color BACKGROUND_COLOR = new Color(0, 105, 175);
+	private final String LOGO_PATH = "media/main_logo.png";
+
 	public AdminControlPanel() {
 		super();
 		int height = 500;
@@ -46,14 +56,17 @@ public class AdminControlPanel extends JPanel {
 	private void buildTopSection(GridBagLayout layout, GridBagConstraints constraints) {
 		constraints.gridy = 0;
 		JPanel panel = new JPanel();
+
+		panel.setBackground(BACKGROUND_COLOR);
 		layout.setConstraints(panel, constraints);
 		this.add(panel);
 
-		
 		JTextField inputArea = buildInputArea(layout);
 
-		//To help clean up the code the action listeners for buttons are sent to the controller, which then sends to the model
+		// To help clean up the code the action listeners for buttons are sent to the
+		// controller, which then sends to the model
 		JPanel buttons = new JPanel();
+		buttons.setBackground(BACKGROUND_COLOR);
 		JButton b1 = new JButton("Create Group");
 		b1.addActionListener(AdminController.get().addEntityAction(inputArea));
 		buttons.add(b1);
@@ -63,7 +76,6 @@ public class AdminControlPanel extends JPanel {
 		JButton b3 = new JButton("Open User");
 		b3.addActionListener(AdminController.get().openUserAction());
 		buttons.add(b3);
-
 
 		panel.add(inputArea);
 		panel.add(buttons);
@@ -92,20 +104,34 @@ public class AdminControlPanel extends JPanel {
 
 		inputArea.setPreferredSize(new DimensionUIResource(285, layout.rowHeights[0] / 4));
 		inputArea.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2, true));
-		
+
 		return inputArea;
 	}
 
 	private void buildMiddleSection(GridBagLayout layout, GridBagConstraints constraints) {
 		constraints.gridy = 1;
 		JPanel panel = new JPanel();
+		panel.setBackground(Color.LIGHT_GRAY);
 		layout.setConstraints(panel, constraints);
+
+		try {
+			BufferedImage img = ImageIO.read(new File(LOGO_PATH));
+			Image scaledImage = img.getScaledInstance(500, 280, Image.SCALE_SMOOTH);
+			ImageIcon icon = new ImageIcon(scaledImage);
+			JLabel label = new JLabel(icon);
+			label.setSize(350, 210);
+			panel.add(label);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		this.add(panel);
 	}
 
 	private void buildBottomSection(GridBagLayout layout, GridBagConstraints constraints) {
 		constraints.gridy = 2;
 		JPanel panel = new JPanel(new GridLayout(3, 2, 5, 5));
+		panel.setBackground(BACKGROUND_COLOR);
 		layout.setConstraints(panel, constraints);
 		this.add(panel);
 
@@ -125,9 +151,9 @@ public class AdminControlPanel extends JPanel {
 		b4.addActionListener((AdminController.get().getPositivityPercent()));
 		panel.add(b4);
 
-		//JButton b5 = new JButton("Validate Entities");
-		//JButton b6 = new JButton("Get Last Updated User");
-		//panel.add(b6);
-		//panel.add(b5);
+		// JButton b5 = new JButton("Validate Entities");
+		// JButton b6 = new JButton("Get Last Updated User");
+		// panel.add(b6);
+		// panel.add(b5);
 	}
 }

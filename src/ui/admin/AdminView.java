@@ -19,18 +19,16 @@ public class AdminView extends JFrame {
 
 	public AdminView(String string) {
 		super(string);
-		// Admin Panel closes & closes all other windows on exit
+
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// Center Admin Panel on screen when starting
 		this.setLocationRelativeTo(null);
 		this.setMinimumSize(new DimensionUIResource(600, 500));
-		// Set up window icon
+
 		URL iconURL = this.getClass().getResource("/media/icon.png");
 		ImageIcon icon = new ImageIcon(iconURL);
 		this.setIconImage(icon.getImage());
-		// Build main ui components
+
 		this.add(this.buildSplitPane());
-		// Pack components then show window
 		this.pack();
 		this.setVisible(true);
 	}
@@ -53,9 +51,12 @@ public class AdminView extends JFrame {
 		return splitPane;
 	}
 
+	/**
+	 * builds the scroll pane where the tree will be attached to, thus making my tree scrollable
+	 * @return
+	 */
 	private JScrollPane buildScrollPane() {
 		JScrollPane pane = new JScrollPane();
-
 		pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		pane.setMinimumSize(new DimensionUIResource(140, 200));

@@ -3,6 +3,7 @@ package src.models;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import src.controllers.EntityTree;
 import src.ui.user.UserView;
@@ -44,7 +45,7 @@ public class AdminModel {
 	public ActionListener addEntityAction(JTextField inputArea) {
 		return event -> {
 			// Validate text by making sure there is no illegal chars
-			if (!this.validateUniqueID(inputArea.getText())) {
+			if (!this.validateInput(inputArea.getText())) {
 				JOptionPane.showMessageDialog(null, "Invalid input!", "", JOptionPane.WARNING_MESSAGE);
 				inputArea.setText("Enter Entity ID");
 				return;
@@ -206,7 +207,7 @@ public class AdminModel {
 	 * @param str
 	 * @return
 	 */
-	private boolean validateUniqueID(String str) {
+	private boolean validateInput(String str) {
 		boolean result = true;
 		str = str.trim();
 

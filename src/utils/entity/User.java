@@ -24,6 +24,9 @@ public class User extends Entity {
 		this.followers = new LinkedHashSet<>();
 		this.following = new LinkedHashSet<>();
 		this.feed = new Feed();
+
+		//Forces Users to be a leaf in the tree
+		this.allowsChildren = false;
 	}
 
 	public boolean isUser() {
