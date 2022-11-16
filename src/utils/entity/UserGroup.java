@@ -12,7 +12,7 @@ import javax.swing.tree.TreeNode;
  * This class also provides an easy way to get users and groups separately
  */
 public class UserGroup extends Entity {
-	//test
+
 	public UserGroup(String uniqueID) {
 		super(uniqueID);
 	}
