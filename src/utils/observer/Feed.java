@@ -10,7 +10,7 @@ import src.utils.message.Tweet;
  * Feeds can be observed by a userviews.
  * I figured instead of subscripting to a user, I can have my observer pattern more general purpose in case I needed to add to it
  */
-public class Feed extends Subject {
+public class Feed {
 	private List<Tweet> tweets;
 
 	public Feed() {
@@ -20,7 +20,6 @@ public class Feed extends Subject {
 
 	public void addTweet(Tweet tweet) {
 		this.tweets.add(tweet);
-		this.notifyObervers();
 	}
 
 	public List<Tweet> getTweets() {

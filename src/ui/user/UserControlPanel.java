@@ -113,7 +113,7 @@ public class UserControlPanel extends JPanel implements Observer {
 				this.following.append(userNode.getIdName() + "\n");
 
 				userNode.addFollower(user);
-				userNode.getFeed().attach(this);
+				//userNode.getFeed().attach(this);
 
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "Invalid Entity", "", JOptionPane.INFORMATION_MESSAGE);

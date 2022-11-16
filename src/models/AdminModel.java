@@ -61,6 +61,7 @@ public class AdminModel {
 			}
 
 			// Add group or user based on button used
+			// I could remove this switch with OOP, but seems overkill for this project
 			JButton buttonPressed = (JButton) event.getSource();
 			switch (buttonPressed.getText()) {
 				case "Create Group":
@@ -111,17 +112,7 @@ public class AdminModel {
 	 * @return
 	 */
 	public Set<User> getUsers(UserGroup group) {
-		Set<User> allUsers = new HashSet<User>();
-
-		for (User u : group.getUsers()) {
-			allUsers.add(u);
-		}
-
-		for (UserGroup subGroup : group.getGroups()) {
-			allUsers.addAll(this.getUsers(subGroup));
-		}
-
-		return allUsers;
+		return this.rootGroup.getUsers();
 	}
 
 	/**
@@ -135,9 +126,9 @@ public class AdminModel {
 		Set<UserGroup> allGroups = new HashSet<UserGroup>();
 		allGroups.add(group);
 
-		for (UserGroup subGroups : group.getGroups()) {
-			allGroups.addAll(this.getUserGroups(subGroups));
-		}
+		// for (UserGroup subGroups : group.getGroups()) {
+		// 	allGroups.addAll(this.getUserGroups(subGroups));
+		// }
 
 		return allGroups;
 	}
@@ -206,8 +197,8 @@ public class AdminModel {
 				}
 			}
 
-			System.out.println(count);
-			System.out.println(tweets.size());
+			//System.out.println(count);
+			//System.out.println(tweets.size());
 			count /= tweets.size();
 			count *= 100;
 
@@ -237,13 +228,13 @@ public class AdminModel {
 	}
 
 	private void addUserToTree(EntityTree tree, UserGroup rootGroup, User user) {
-		rootGroup.addUser(user);
+		//rootGroup.addUser(user);
 		rootGroup.add(user);
 		this.tree.render(rootGroup);
 	}
 
 	private void addGroupToTree(EntityTree tree, UserGroup rootGroup, UserGroup uGroup) {
-		rootGroup.addGroup(uGroup);
+		//rootGroup.addGroup(uGroup);
 		rootGroup.add(uGroup);
 		this.tree.render(rootGroup);
 	}

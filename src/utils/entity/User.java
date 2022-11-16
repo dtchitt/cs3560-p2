@@ -5,17 +5,20 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import src.utils.message.Tweet;
 import src.utils.observer.Feed;
+import src.utils.message.Tweet;
+import src.utils.observer.Observer;
+import src.utils.observer.Subject;
 
 /**
  * A user is an entity in the system.
  * The user has a feed which contains tweets.
  * The user has a SET of followers and following, this is to garuntee no duplicates
  */
-public class User extends Entity {
+public class User extends Entity implements Subject, Observer {
 	private Set<User> followers;
 	private Set<User> following;
+	private Set<Observer> observers;
 	private Feed feed;
 	
 	public User(String uniqueID) {
@@ -75,5 +78,27 @@ public class User extends Entity {
 
 	public int getTweetCount() {
 		return this.getTweets().size();
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void attach(Observer observer) {
+		this.observers.add(observer);
+	}
+
+	@Override
+	public void detach(Observer observer) {
+		this.observers.remove(observer);
+	}
+
+	@Override
+	public void notifyObervers() {
+		for (Observer observer : observers) {
+			observer.update();
+		}
 	}
 }

@@ -6,10 +6,11 @@ import src.utils.TimeStamp;
 import src.utils.UniqueID;
 
 /**
- * Entity servers as "sysEntry" as your video says. I decided to make entity a defaultMutableTreenode because it makes working with the tree easier.
- * Entities also have a uniqueID and a timestamp.
+ * Entity servers as "sysEntry" as your video says. It is a DMTN, which makes this entire project alot easier.
+ * It allows me to manipulate the entire entity list and find users/groups with built in functionality
  */
 public abstract class Entity extends DefaultMutableTreeNode {
+	//I think a has-a relation is better for id and time stamp.
 	private UniqueID id;
 	private TimeStamp timeStamp;
 

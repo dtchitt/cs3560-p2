@@ -1,42 +1,47 @@
 package src.utils.entity;
 
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.swing.tree.TreeNode;
+
 /**
- * A usergroup is an entity in the system.
- * usergroups have a set of groups and a set of users to avoid duplicates of course
+ * UserGroup functions as a non leaf node in the tree.
+ * I do not explicitly keep a list of users and groups. I feel that due to this being a tree, it implicity already has children that are entities, thus this is not a leaf.
+ * I can collect the users and groups within this group on hand by iterating over the children (entities) of this node.
+ * This class also provides an easy way to get users and groups separately
  */
 public class UserGroup extends Entity {
-	private Set<UserGroup> groups;
-	private Set<User> users;
-
+	
 	public UserGroup(String uniqueID) {
 		super(uniqueID);
-
-		this.groups = new HashSet<UserGroup>();
-		this.users = new LinkedHashSet<User>();
-	}
-
-	public boolean isUserGroup() {
-		return this instanceof UserGroup;
-	}
-
-	public void addUser(User user) {
-		this.add(user);
-		this.users.add(user);
 	}
 
 	public Set<User> getUsers() {
-		return this.users;
-	}
+		Set<User> users = new HashSet<>();
 
-	public void addGroup(UserGroup group) {
-		this.groups.add(group);
+		for (int i = 0; i < this.getChildCount(); i++) {
+			TreeNode child = this.getChildAt(i);
+
+			if (!this.getAllowsChildren()) {
+				users.add((User) child);
+			}
+		}
+
+		return users;
 	}
 
 	public Set<UserGroup> getGroups() {
-		return this.groups;
+		Set<UserGroup> groups = new HashSet<>();
+
+		for (int i = 0; i < this.getChildCount(); i++) {
+			TreeNode child = this.getChildAt(i);
+
+			if (this.getAllowsChildren()) {
+				groups.add((UserGroup) child);
+			}
+		}
+
+		return groups;
 	}
 }

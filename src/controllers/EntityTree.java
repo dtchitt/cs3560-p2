@@ -20,7 +20,7 @@ public class EntityTree extends JTree {
 
 		this.setModel(new DefaultTreeModel(rootGroup));
 		// Add Tom, good ol myspace
-		rootGroup.addUser(new User("Tom"));
+		rootGroup.add(new User("Tom"));
 		this.render(rootGroup);
 		this.expandPath(new TreePath(rootGroup.getPath()));
 
