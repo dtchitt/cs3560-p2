@@ -50,12 +50,12 @@ public class AdminModel {
 			}
 
 			Object object = this.tree.getSelectedObject();
-			if (EntityTree.objectToNode(object) instanceof User) {
-				object = EntityTree.objectToNode(object).getParent();
+			if (EntityTree.nodeFromObject(object) instanceof User) {
+				object = EntityTree.nodeFromObject(object).getParent();
 			}
 
 			UserGroup rootGroup = this.rootGroup;
-			if (EntityTree.objectToNode(object) == null) {
+			if (EntityTree.nodeFromObject(object) == null) {
 				rootGroup = this.rootGroup;
 			} else {
 				rootGroup = (UserGroup) object;

@@ -21,20 +21,19 @@ public class EntityTree extends JTree {
 		this.setModel(new DefaultTreeModel(rootGroup));
 		// Add Tom, good ol myspace
 		rootGroup.addUser(new User("Tom"));
-		//this.getDefaultModel().nodesWereInserted(rootGroup, new int[] { rootGroup.getChildCount() - 1 });
 		this.render(rootGroup);
 		this.expandPath(new TreePath(rootGroup.getPath()));
 
 		this.setRenderer();
 	}
 
-	public static DefaultMutableTreeNode objectToNode(Object object) {
+	public static DefaultMutableTreeNode nodeFromObject(Object object) {
 		return (DefaultMutableTreeNode) object;
 	}
 
-	// public static DefaultMutableTreeNode treePathToNode(TreePath path) {
-	// 	return (DefaultMutableTreeNode) path.getLastPathComponent();
-	// }
+	public static DefaultMutableTreeNode nodeFromPath(TreePath path) {
+		return (DefaultMutableTreeNode) path.getLastPathComponent();
+	}
 
 	// private DefaultTreeModel getDefaultModel() {
 	// 	return ((DefaultTreeModel) this.getModel());
@@ -50,8 +49,9 @@ public class EntityTree extends JTree {
 	}
 
 	public User getUser(String id) {
+		this.getModel().getChild(id, UNDEFINED_CONDITION);
 		TreePath path = this.getNextMatch(id, 0, Position.Bias.Forward);
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+		DefaultMutableTreeNode node = EntityTree.nodeFromPath(path);
 		return (User) node;
 	}
 
@@ -64,13 +64,13 @@ public class EntityTree extends JTree {
 			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean isLeaf, int row, boolean hasFocus) {
 				Component result = super.getTreeCellRendererComponent(tree, value, isSelected, expanded, isLeaf, row, hasFocus);
 
-				DefaultMutableTreeNode node = EntityTree.objectToNode(value);
+				DefaultMutableTreeNode node = EntityTree.nodeFromObject(value);
 
-				if (node instanceof UserGroup) {
+				if (node.getAllowsChildren()) {
 					this.setIcon(UIManager.getIcon("FileView.directoryIcon"));
 				}
 
-				if (node instanceof User) {
+				if (!node.getAllowsChildren()) {
 					this.setIcon(UIManager.getIcon("FileView.fileIcon"));
 				}
 
