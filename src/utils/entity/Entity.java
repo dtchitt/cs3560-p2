@@ -58,6 +58,6 @@ public abstract class Entity extends DefaultMutableTreeNode {
 	//TODO instead of using this to get node name figure out a better way
 	@Override
 	public String toString() {
-		return this.getUniqueID();
+		return this.getIdName();
 	}
 }

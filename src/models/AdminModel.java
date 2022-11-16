@@ -3,8 +3,6 @@ package src.models;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.tree.DefaultMutableTreeNode;
-
 import src.controllers.EntityTree;
 import src.ui.user.UserView;
 import src.utils.entity.User;
