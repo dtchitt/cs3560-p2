@@ -49,6 +49,27 @@ public class AdminControlPanel extends JPanel {
 		layout.setConstraints(panel, constraints);
 		this.add(panel);
 
+		
+		JTextField inputArea = buildInputArea(layout);
+
+		//To help clean up the code the action listeners for buttons are sent to the controller, which then sends to the model
+		JPanel buttons = new JPanel();
+		JButton b1 = new JButton("Create Group");
+		b1.addActionListener(AdminController.get().addEntityAction(inputArea));
+		buttons.add(b1);
+		JButton b2 = new JButton("Create User");
+		b2.addActionListener(AdminController.get().addEntityAction(inputArea));
+		buttons.add(b2);
+		JButton b3 = new JButton("Open User");
+		b3.addActionListener(AdminController.get().openUserAction());
+		buttons.add(b3);
+
+
+		panel.add(inputArea);
+		panel.add(buttons);
+	}
+
+	private JTextField buildInputArea(GridBagLayout layout) {
 		String defaultString = "Enter Entity ID";
 		JTextField inputArea = new JTextField(defaultString);
 
@@ -71,21 +92,8 @@ public class AdminControlPanel extends JPanel {
 
 		inputArea.setPreferredSize(new DimensionUIResource(285, layout.rowHeights[0] / 4));
 		inputArea.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2, true));
-		//To help clean up the code the action listeners for buttons are sent to the controller, which then sends to the model
-		JPanel buttons = new JPanel();
-		JButton b1 = new JButton("Create Group");
-		b1.addActionListener(AdminController.get().addEntityAction(inputArea));
-		buttons.add(b1);
-		JButton b2 = new JButton("Create User");
-		b2.addActionListener(AdminController.get().addEntityAction(inputArea));
-		buttons.add(b2);
-		JButton b3 = new JButton("Open User");
-		b3.addActionListener(AdminController.get().openUserAction());
-		buttons.add(b3);
-
-
-		panel.add(inputArea);
-		panel.add(buttons);
+		
+		return inputArea;
 	}
 
 	private void buildMiddleSection(GridBagLayout layout, GridBagConstraints constraints) {

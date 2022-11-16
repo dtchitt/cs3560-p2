@@ -25,10 +25,10 @@ public class UserView extends JFrame {
 		UserControlPanel splitPane = new UserControlPanel(user);
 		this.add(splitPane);
 
-		// URL iconURL = getClass().getResource("/media/icon.png");
-		// // iconURL is null when not found
-		// ImageIcon icon = new ImageIcon(iconURL);
-		// this.setIconImage(icon.getImage());
+		URL iconURL = getClass().getResource("/media/icon.png");
+		// iconURL is null when not found
+		ImageIcon icon = new ImageIcon(iconURL);
+		this.setIconImage(icon.getImage());
 		
 		this.pack();
 		this.setVisible(true);

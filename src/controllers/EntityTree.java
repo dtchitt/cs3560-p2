@@ -32,16 +32,17 @@ public class EntityTree extends JTree {
 		return (DefaultMutableTreeNode) object;
 	}
 
-	public static DefaultMutableTreeNode treePathToNode(TreePath path) {
-		return (DefaultMutableTreeNode) path.getLastPathComponent();
-	}
+	// public static DefaultMutableTreeNode treePathToNode(TreePath path) {
+	// 	return (DefaultMutableTreeNode) path.getLastPathComponent();
+	// }
 
-	private DefaultTreeModel getDefaultModel() {
-		return ((DefaultTreeModel) this.getModel());
-	}
+	// private DefaultTreeModel getDefaultModel() {
+	// 	return ((DefaultTreeModel) this.getModel());
+	// }
 
 	public void render(UserGroup rootNode) {
-		this.getDefaultModel().nodesWereInserted(rootNode, new int[] { rootNode.getChildCount() - 1 });
+		DefaultTreeModel treeModel = (DefaultTreeModel) this.getModel();
+		treeModel.nodesWereInserted(rootNode, new int[] { rootNode.getChildCount() - 1 });
 	}
 
 	public Object getSelectedObject() {
@@ -50,7 +51,8 @@ public class EntityTree extends JTree {
 
 	public User getUser(String id) {
 		TreePath path = this.getNextMatch(id, 0, Position.Bias.Forward);
-		return (User) EntityTree.treePathToNode(path);
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+		return (User) node;
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class EntityTree extends JTree {
 			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean isSelected, boolean expanded, boolean isLeaf, int row, boolean hasFocus) {
 				Component result = super.getTreeCellRendererComponent(tree, value, isSelected, expanded, isLeaf, row, hasFocus);
 
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+				DefaultMutableTreeNode node = EntityTree.objectToNode(value);
 
 				if (node instanceof UserGroup) {
 					this.setIcon(UIManager.getIcon("FileView.directoryIcon"));

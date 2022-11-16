@@ -24,7 +24,8 @@ import src.utils.observer.Observer;
 /**
  * Okay honestly I was rushing and this is really messy, sorry
  * This is pretty much an all in one for user UI and logic.
- * The control panel is what actually observes users feeds so it knows when to update
+ * The control panel is what actually observes users feeds so it knows when to
+ * update
  */
 public class UserControlPanel extends JPanel implements Observer {
 	private User user;
@@ -39,11 +40,16 @@ public class UserControlPanel extends JPanel implements Observer {
 		this.setMinimumSize(new DimensionUIResource(420, height));
 
 		GridBagLayout layout = new GridBagLayout();
-		GridBagConstraints constraints = new GridBagConstraints();
-		layout.rowHeights = new int[] { (int) (height * 0.07), (int) (height * 0.40), (int) (height * 0.13),
-				(int) (height * 0.40) };
+		layout.rowHeights = new int[] {
+				(int) (height * 0.07),
+				(int) (height * 0.40),
+				(int) (height * 0.13),
+				(int) (height * 0.40)
+		};
+
 		this.setLayout(layout);
 
+		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.weightx = 1;
 		constraints.weighty = 1;
 		constraints.gridheight = 1;
@@ -223,7 +229,7 @@ public class UserControlPanel extends JPanel implements Observer {
 		}
 
 		this.feedArea.setText(feed);
-		//this.feedArea.repaint();
+		// this.feedArea.repaint();
 		this.feedArea.update(this.feedArea.getGraphics());
 	}
 

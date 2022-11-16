@@ -25,9 +25,9 @@ public class AdminView extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setMinimumSize(new DimensionUIResource(600, 500));
 		// Set up window icon
-		// URL iconURL = this.getClass().getResource("/media/icon.png");
-		// ImageIcon icon = new ImageIcon(iconURL);
-		// this.setIconImage(icon.getImage());
+		URL iconURL = this.getClass().getResource("/media/icon.png");
+		ImageIcon icon = new ImageIcon(iconURL);
+		this.setIconImage(icon.getImage());
 		// Build main ui components
 		this.add(this.buildSplitPane());
 		// Pack components then show window
