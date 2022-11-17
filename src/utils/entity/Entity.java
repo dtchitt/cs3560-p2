@@ -16,6 +16,7 @@ public abstract class Entity extends DefaultMutableTreeNode {
 
 	public Entity(String id) {
 		super();
+		
 		this.id = new UniqueID(id);
 		this.timeStamp = new TimeStamp();
 	}

@@ -20,7 +20,7 @@ public class UserGroup extends Entity {
 	public Set<User> getUsers() {
 		Set<User> users = new HashSet<>();
 
-		for (int i = 0; i < this.getChildCount(); i++) {
+		for (int i = 0; i < this.getChildCount() - 1; i++) {
 			TreeNode child = this.getChildAt(i);
 
 			if (!this.getAllowsChildren()) {
@@ -34,7 +34,7 @@ public class UserGroup extends Entity {
 	public Set<UserGroup> getGroups() {
 		Set<UserGroup> groups = new HashSet<>();
 
-		for (int i = 0; i < this.getChildCount(); i++) {
+		for (int i = 0; i < this.getChildCount() - 1; i++) {
 			TreeNode child = this.getChildAt(i);
 
 			if (this.getAllowsChildren()) {

@@ -9,5 +9,5 @@ public interface Observer {
 	/**
 	 * The method called when the subject notifies its observers
 	 */
-	public void update();
+	public void update(Subject subject);
 }

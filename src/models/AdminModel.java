@@ -84,6 +84,7 @@ public class AdminModel {
 		if (!EntityTree.nodeFromObject(object).getAllowsChildren()) {
 			object = EntityTree.nodeFromObject(object).getParent();
 		}
+		
 		return object;
 	}
 

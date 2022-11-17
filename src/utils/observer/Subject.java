@@ -12,14 +12,11 @@ public interface Subject {
      */
     public void attach(Observer observer);
 
-    /**
-     * Remove an observer from the list.
-     * @param observer
-     */
-    public void detach(Observer observer);
+    // Not needed for this project
+    // public void detach(Observer observer);
 
     /**
      * Notify all attached observers to update.
      */
-    public void notifyObervers();
+    public void notifyObservers();
 }

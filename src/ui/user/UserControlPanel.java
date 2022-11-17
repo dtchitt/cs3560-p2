@@ -2,6 +2,7 @@ package src.ui.user;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -11,6 +12,7 @@ import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import javax.swing.DefaultListModel;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -27,9 +29,8 @@ import src.utils.observer.Observer;
  * The control panel is what actually observes users feeds so it knows when to
  * update
  */
-public class UserControlPanel extends JPanel implements Observer {
+public class UserControlPanel extends JPanel {
 	private User user;
-	private JTextArea following;
 	private JTextArea feedArea;
 
 	public UserControlPanel(User user) {
@@ -98,25 +99,24 @@ public class UserControlPanel extends JPanel implements Observer {
 			try {
 				User userNode = AdminController.get().model().tree().getUser(inputArea.getText());
 
-				if (this.user.getFollowing().contains(userNode)) {
-					JOptionPane.showMessageDialog(null, "You are already following that user!", "",
-							JOptionPane.WARNING_MESSAGE);
+				if (this.user.isFollowing(userNode)) {
+					this.warningMessage("You are already following that user!");
 					return;
 				}
 
-				if (this.user == userNode) {
-					JOptionPane.showMessageDialog(null, "You cannot follow yourself!", "", JOptionPane.WARNING_MESSAGE);
+				if (this.user.equals(userNode)) {
+					this.warningMessage("You cannot follow yourself!");
 					return;
 				}
 
-				this.user.addfollowing(userNode);
-				this.following.append(userNode.getIdName() + "\n");
+				// this.user.addfollowing(userNode);
+				//this.followingList(userNode.getIdName() + "\n");
 
-				userNode.addFollower(user);
-				//userNode.getFeed().attach(this);
+				//userNode.addFollower(this.user);
+				// userNode.getFeed().attach(this);
 
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Invalid Entity", "", JOptionPane.INFORMATION_MESSAGE);
+				this.warningMessage("Invalid Entity");
 				return;
 			}
 		});
@@ -125,21 +125,26 @@ public class UserControlPanel extends JPanel implements Observer {
 		panel.add(button);
 	}
 
+	private void warningMessage(String msg) {
+		JOptionPane.showMessageDialog(null, msg, "", JOptionPane.WARNING_MESSAGE);
+	}
+
 	private void buildFollowingView(GridBagLayout layout, GridBagConstraints constraints) {
 		constraints.gridy = 1;
 		constraints.gridx = 0;
 
-		this.following = new JTextArea("Following:\n");
+		DefaultListModel<String> model = new DefaultListModel<String>();
+
+		JList<String> jList = new JList<String>(model);
+		jList.setBackground(Color.WHITE);
+		jList.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
+		jList.setName("Following");
 
 		for (User user : this.user.getFollowing()) {
-			this.following.append(user.getIdName() + "\n");
+			model.addElement(user.getIdName());
 		}
 
-		layout.setConstraints(following, constraints);
-		following.setBackground(Color.WHITE);
-		following.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
-
-		this.add(following);
+		this.add(jList);
 	}
 
 	private void buildTweetControls(GridBagLayout layout, GridBagConstraints constraints) {
@@ -174,17 +179,17 @@ public class UserControlPanel extends JPanel implements Observer {
 
 		JButton button = new JButton("Post Tweet");
 
-		button.addActionListener(event -> {
-			try {
-				Tweet tweet = new Tweet(inputArea.getText(), this.user);
-				this.user.tweet(tweet);
-				inputArea.setText(defaultString);
-				this.update();
-			} catch (Exception e) {
-				e.printStackTrace();
-				return;
-			}
-		});
+		// button.addActionListener(event -> {
+		// try {
+		// Tweet tweet = new Tweet(inputArea.getText(), this.user);
+		// this.user.tweet(tweet);
+		// inputArea.setText(defaultString);
+		// this.update();
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// return;
+		// }
+		// });
 
 		panel.add(inputArea);
 		panel.add(button);
@@ -195,7 +200,7 @@ public class UserControlPanel extends JPanel implements Observer {
 		constraints.gridx = 0;
 
 		this.feedArea = new JTextArea();
-		this.update();
+		this.updateFeed();
 
 		layout.setConstraints(this.feedArea, constraints);
 		this.feedArea.setBackground(Color.WHITE);
@@ -209,14 +214,14 @@ public class UserControlPanel extends JPanel implements Observer {
 
 		List<Tweet> tweets = this.user.getTweets();
 
-		for (User u : this.user.getFollowing()) {
-			for (Tweet uTweet : u.getTweets()) {
-				if (this.user.getFollowing().contains(uTweet.getUser())) {
-					tweets.add(uTweet);
-				}
+		// for (User u : this.user.getFollowing()) {
+		// for (Tweet uTweet : u.getTweets()) {
+		// if (this.user.getFollowing().contains(uTweet.getUser())) {
+		// tweets.add(uTweet);
+		// }
 
-			}
-		}
+		// }
+		// }
 
 		Set<Tweet> uniqueTweets = new LinkedHashSet<Tweet>();
 		uniqueTweets.addAll(tweets);
@@ -231,10 +236,5 @@ public class UserControlPanel extends JPanel implements Observer {
 		this.feedArea.setText(feed);
 		// this.feedArea.repaint();
 		this.feedArea.update(this.feedArea.getGraphics());
-	}
-
-	@Override
-	public void update() {
-		this.updateFeed();
 	}
 }

@@ -1,11 +1,12 @@
 package src.utils.entity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import src.utils.observer.Feed;
+import src.ui.user.Feed;
 import src.utils.message.Tweet;
 import src.utils.observer.Observer;
 import src.utils.observer.Subject;
@@ -13,92 +14,122 @@ import src.utils.observer.Subject;
 /**
  * A user is an entity in the system.
  * The user has a feed which contains tweets.
- * The user has a SET of followers and following, this is to garuntee no duplicates
+ * The user has a SET of followers and following, this is to garuntee no
+ * duplicates
  */
 public class User extends Entity implements Subject, Observer {
-	private Set<User> followers;
-	private Set<User> following;
-	private Set<Observer> observers;
+	private Set<User> followers; // observers
+	private Set<User> following; // subjects
+	private List<Tweet> tweets; // tweets by this user
 	private Feed feed;
-	
+
 	public User(String uniqueID) {
 		super(uniqueID);
 
 		this.followers = new LinkedHashSet<>();
 		this.following = new LinkedHashSet<>();
+		this.tweets = new ArrayList<>();
 		this.feed = new Feed();
 
-		//Forces Users to be a leaf in the tree
+		// Forces Users to be a leaf in the tree
 		this.allowsChildren = false;
 	}
 
-	public boolean isUser() {
-		return this instanceof User;
+	/**
+	 * Adds this user to the follow list of another
+	 * This user will become an observer of the subject passed in
+	 * 
+	 * @param user
+	 */
+	public void followUser(User user) {
+		this.following.add(user);
+		user.addFollower(this);
 	}
 
-	public void addFollower(User who) {
-		this.followers.add(who);
+	/**
+	 * Checks if a user is being followed by this user
+	 * @param user the user to check if following
+	 * @return true if following passed in user
+	 */
+	public boolean isFollowing(User user) {
+		return this.following.contains(user);
 	}
 
-	public List<User> getFollowers() {
-		List<User> result = new ArrayList<User>();
+	/**
+	 * Gets all the users this user is following
+	 * @return A set of all users being followed
+	 */
+	public Set<User> getFollowing() {
+		Set<User> followingList = new HashSet<User>();
 
-		for (User user : this.followers) {
-			result.add(user);
+		for (User user : following) {
+			followingList.add(user);
 		}
 
-		return result;
+		return followingList;
 	}
 
-	public void addfollowing(User who) {
-		this.following.add(who);
+	/**
+	 * Adds a user to the list of users following this user
+	 * 
+	 * @param user the user that is now following this user
+	 */
+	public void addFollower(User user) {
+		this.followers.add(user);
+		this.attach(user);
 	}
 
-	public List<User> getFollowing() {
-		List<User> result = new ArrayList<User>();
-
-		for (User user : this.following) {
-			result.add(user);
-		}
-
-		return result;
-	}
-
-	public void tweet(Tweet tweet) {
+	/**
+	 * Add a tweet to the users personal tweet list and to their feed
+	 */
+	public void addTweet(String msg) {
+		Tweet tweet = new Tweet(msg, this);
+		this.tweets.add(tweet);
 		this.feed.addTweet(tweet);
+		this.notifyObservers();
 	}
 
-	public List<Tweet> getTweets() {
-		return this.feed.getTweets();
-	}
-
+	/**
+	 * Gets the feed instance owned by this user
+	 * 
+	 * @return the users feed
+	 */
 	public Feed getFeed() {
 		return this.feed;
 	}
 
-	public int getTweetCount() {
-		return this.getTweets().size();
+	/**
+	 * Gets the list of tweets made by this user
+	 * @return a list of tweets
+	 */
+	public List<Tweet> getTweets() {
+		return tweets;
 	}
 
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-	}
-
+	/**
+	 * Attach an observer to this subject
+	 */
 	@Override
 	public void attach(Observer observer) {
-		this.observers.add(observer);
+		this.followers.add((User) observer);
 	}
 
+	/**
+	 * Notify all observers of this subject
+	 */
 	@Override
-	public void detach(Observer observer) {
-		this.observers.remove(observer);
-	}
-
-	@Override
-	public void notifyObervers() {
-		for (Observer observer : observers) {
-			observer.update();
+	public void notifyObservers() {
+		for (User observer : followers) {
+			observer.update(this);
 		}
+	}
+
+	/**
+	 * Add the subjects new tweet to observers feed
+	 */
+	@Override
+	public void update(Subject subject) {
+		Tweet tweet = ((User) subject).getTweets().get(this.getTweets().size());
+		this.feed.addTweet(tweet);
 	}
 }
