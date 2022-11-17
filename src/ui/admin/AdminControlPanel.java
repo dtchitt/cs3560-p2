@@ -1,10 +1,7 @@
 package src.ui.admin;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.plaf.DimensionUIResource;
@@ -16,9 +13,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.image.BufferedImage;
-import java.awt.Image;
-import java.io.File;
 import java.awt.Color;
 
 /**
@@ -31,7 +25,7 @@ import java.awt.Color;
  */
 public class AdminControlPanel extends JPanel {
 	private final Color BACKGROUND_COLOR = new Color(0, 105, 175);
-	private final String LOGO_PATH = "media/main_logo.png";
+	//private final String LOGO_PATH = "";
 
 	public AdminControlPanel() {
 		super();
@@ -114,16 +108,16 @@ public class AdminControlPanel extends JPanel {
 		panel.setBackground(Color.LIGHT_GRAY);
 		layout.setConstraints(panel, constraints);
 
-		try {
-			BufferedImage img = ImageIO.read(new File(LOGO_PATH));
-			Image scaledImage = img.getScaledInstance(500, 280, Image.SCALE_SMOOTH);
-			ImageIcon icon = new ImageIcon(scaledImage);
-			JLabel label = new JLabel(icon);
-			label.setSize(350, 210);
-			panel.add(label);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// try {
+		// 	BufferedImage img = ImageIO.read(new File(LOGO_PATH));
+		// 	Image scaledImage = img.getScaledInstance(500, 280, Image.SCALE_SMOOTH);
+		// 	ImageIcon icon = new ImageIcon(scaledImage);
+		// 	JLabel label = new JLabel(icon);
+		// 	label.setSize(350, 210);
+		// 	panel.add(label);
+		// } catch (Exception e) {
+		// 	e.printStackTrace();
+		// }
 
 		this.add(panel);
 	}

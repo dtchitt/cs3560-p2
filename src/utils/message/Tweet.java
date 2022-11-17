@@ -1,6 +1,6 @@
 package src.utils.message;
 
-import src.utils.entity.User;
+import src.utils.composite.User;
 import src.utils.visitor.Visitable;
 import src.utils.visitor.Visitor;
 

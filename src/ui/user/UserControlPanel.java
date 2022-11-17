@@ -19,9 +19,8 @@ import java.util.List;
 import java.util.Set;
 
 import src.controllers.AdminController;
-import src.utils.entity.User;
+import src.utils.composite.User;
 import src.utils.message.Tweet;
-import src.utils.observer.Observer;
 
 /**
  * Okay honestly I was rushing and this is really messy, sorry
@@ -31,6 +30,7 @@ import src.utils.observer.Observer;
  */
 public class UserControlPanel extends JPanel {
 	private User user;
+	private JTextArea following;
 	private JTextArea feedArea;
 
 	public UserControlPanel(User user) {
@@ -97,32 +97,38 @@ public class UserControlPanel extends JPanel {
 
 		button.addActionListener(event -> {
 			try {
-				User userNode = AdminController.get().model().tree().getUser(inputArea.getText());
+				User targetUser = AdminController.get().model().tree().getUser(inputArea.getText());
 
-				if (this.user.isFollowing(userNode)) {
-					this.warningMessage("You are already following that user!");
-					return;
+				if (canFollowUser(targetUser)) {
+					this.user.followUser(targetUser);
+					this.following.append(targetUser.getIdName() + "\n");
+					this.following.repaint();
 				}
-
-				if (this.user.equals(userNode)) {
-					this.warningMessage("You cannot follow yourself!");
-					return;
-				}
-
-				// this.user.addfollowing(userNode);
-				//this.followingList(userNode.getIdName() + "\n");
-
-				//userNode.addFollower(this.user);
-				// userNode.getFeed().attach(this);
-
+				
 			} catch (Exception e) {
+				e.printStackTrace();
 				this.warningMessage("Invalid Entity");
-				return;
 			}
 		});
 
 		panel.add(inputArea);
 		panel.add(button);
+	}
+
+	private boolean canFollowUser(User targetUser) {
+		boolean result = true;
+
+		if (this.user.isFollowing(targetUser)) {
+			this.warningMessage("You are already following that user!");
+			result = false;
+		}
+
+		if (this.user.equals(targetUser)) {
+			this.warningMessage("You cannot follow yourself!");
+			result = false;
+		}
+
+		return result;
 	}
 
 	private void warningMessage(String msg) {
@@ -133,18 +139,17 @@ public class UserControlPanel extends JPanel {
 		constraints.gridy = 1;
 		constraints.gridx = 0;
 
-		DefaultListModel<String> model = new DefaultListModel<String>();
-
-		JList<String> jList = new JList<String>(model);
-		jList.setBackground(Color.WHITE);
-		jList.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
-		jList.setName("Following");
+		this.following = new JTextArea("Following:\n");
 
 		for (User user : this.user.getFollowing()) {
-			model.addElement(user.getIdName());
+			this.following.append(user.getIdName() + "\n");
 		}
 
-		this.add(jList);
+		layout.setConstraints(following, constraints);
+		following.setBackground(Color.WHITE);
+		following.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
+
+		this.add(following);
 	}
 
 	private void buildTweetControls(GridBagLayout layout, GridBagConstraints constraints) {

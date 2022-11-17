@@ -5,8 +5,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import src.controllers.EntityTree;
 import src.ui.user.UserView;
-import src.utils.entity.User;
-import src.utils.entity.UserGroup;
+import src.utils.composite.User;
+import src.utils.composite.UserGroup;
 import src.utils.message.Tweet;
 import src.utils.visitor.TweetPositivityVisitor;
 
@@ -51,9 +51,9 @@ public class AdminModel {
 			}
 
 			// get the node or its parent
+			UserGroup rootGroup = this.rootGroup;
 			Object object = getSelectedNode();
 
-			UserGroup rootGroup = this.rootGroup;
 			if (EntityTree.nodeFromObject(object) == null) {
 				rootGroup = this.rootGroup;
 			} else {
@@ -75,16 +75,22 @@ public class AdminModel {
 				default:
 					break;
 			}
+
+			inputArea.setText("Enter Entity ID");
 		};
 	}
 
 	private Object getSelectedNode() {
 		Object object = this.tree.getLastSelectedPathComponent();
 
+		if (object == null) {
+			return null;
+		}
+
 		if (!EntityTree.nodeFromObject(object).getAllowsChildren()) {
 			object = EntityTree.nodeFromObject(object).getParent();
 		}
-		
+
 		return object;
 	}
 
@@ -128,7 +134,7 @@ public class AdminModel {
 		allGroups.add(group);
 
 		// for (UserGroup subGroups : group.getGroups()) {
-		// 	allGroups.addAll(this.getUserGroups(subGroups));
+		// allGroups.addAll(this.getUserGroups(subGroups));
 		// }
 
 		return allGroups;
@@ -198,8 +204,8 @@ public class AdminModel {
 				}
 			}
 
-			//System.out.println(count);
-			//System.out.println(tweets.size());
+			// System.out.println(count);
+			// System.out.println(tweets.size());
 			count /= tweets.size();
 			count *= 100;
 
@@ -229,13 +235,13 @@ public class AdminModel {
 	}
 
 	private void addUserToTree(EntityTree tree, UserGroup rootGroup, User user) {
-		//rootGroup.addUser(user);
+		// rootGroup.addUser(user);
 		rootGroup.add(user);
 		this.tree.render(rootGroup);
 	}
 
 	private void addGroupToTree(EntityTree tree, UserGroup rootGroup, UserGroup uGroup) {
-		//rootGroup.addGroup(uGroup);
+		// rootGroup.addGroup(uGroup);
 		rootGroup.add(uGroup);
 		this.tree.render(rootGroup);
 	}

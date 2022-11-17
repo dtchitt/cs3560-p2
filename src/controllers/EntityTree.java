@@ -7,8 +7,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import src.utils.entity.User;
-import src.utils.entity.UserGroup;
+
+import src.utils.composite.User;
+import src.utils.composite.UserGroup;
+
 import java.awt.Component;
 
 /**
@@ -45,10 +47,17 @@ public class EntityTree extends JTree {
 	}
 
 	public User getUser(String id) {
-		this.getModel().getChild(id, UNDEFINED_CONDITION);
 		TreePath path = this.getNextMatch(id, 0, Position.Bias.Forward);
-		DefaultMutableTreeNode node = EntityTree.nodeFromPath(path);
-		return (User) node;
+
+		if (path != null) {
+			DefaultMutableTreeNode node = EntityTree.nodeFromPath(path);
+
+			if (!node.getAllowsChildren()) {
+				return (User) node;
+			}
+		}
+
+		return null;
 	}
 
 	/**

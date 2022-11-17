@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.plaf.DimensionUIResource;
 
-import src.utils.entity.User;
+import src.utils.composite.User;
 
 /**
  * This creates the user view window when the open view button is clicked

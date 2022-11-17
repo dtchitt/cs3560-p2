@@ -1,4 +1,4 @@
-package src.utils.entity;
+package src.utils.composite;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -6,7 +6,8 @@ import src.utils.TimeStamp;
 import src.utils.UniqueID;
 
 /**
- * Entity servers as "sysEntry" as your video says. It is a DMTN, which makes this entire project alot easier.
+ * Entity is the component in the composite pattern.
+ * It is a DefaultMutableTreeNode, which makes this entire project alot easier.
  * It allows me to manipulate the entire entity list and find users/groups with built in functionality
  */
 public abstract class Entity extends DefaultMutableTreeNode {
@@ -60,6 +61,6 @@ public abstract class Entity extends DefaultMutableTreeNode {
 	//TODO instead of using this to get node name figure out a better way
 	@Override
 	public String toString() {
-		return this.getIdName();
+		return this.getUniqueID();
 	}
 }

@@ -1,4 +1,4 @@
-package src.utils.entity;
+package src.utils.composite;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,7 +12,7 @@ import src.utils.observer.Observer;
 import src.utils.observer.Subject;
 
 /**
- * A user is an entity in the system.
+ * A user is an entity in the system and is a leaf in the composite pattern
  * The user has a feed which contains tweets.
  * The user has a SET of followers and following, this is to garuntee no
  * duplicates
@@ -60,13 +60,7 @@ public class User extends Entity implements Subject, Observer {
 	 * @return A set of all users being followed
 	 */
 	public Set<User> getFollowing() {
-		Set<User> followingList = new HashSet<User>();
-
-		for (User user : following) {
-			followingList.add(user);
-		}
-
-		return followingList;
+		return following;
 	}
 
 	/**
