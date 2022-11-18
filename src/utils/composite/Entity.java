@@ -4,13 +4,14 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import src.utils.TimeStamp;
 import src.utils.UniqueID;
+import src.utils.visitor.Visitable;
 
 /**
  * Entity is the component in the composite pattern.
  * It is a DefaultMutableTreeNode, which makes this entire project alot easier.
  * It allows me to manipulate the entire entity list and find users/groups with built in functionality
  */
-public abstract class Entity extends DefaultMutableTreeNode {
+public abstract class Entity extends DefaultMutableTreeNode implements Visitable {
 	//I think a has-a relation is better for id and time stamp.
 	private UniqueID id;
 	private TimeStamp timeStamp;

@@ -9,6 +9,7 @@ import src.utils.message.Feed;
 import src.utils.message.Tweet;
 import src.utils.observer.Observer;
 import src.utils.observer.Subject;
+import src.utils.visitor.Visitor;
 
 /**
  * A user is an entity in the system and is a leaf in the composite pattern
@@ -129,5 +130,10 @@ public class User extends Entity implements Subject, Observer {
 		List<Tweet> subjectTweets =  ((User) subject).getTweets();
 		Tweet tweet = subjectTweets.get(subjectTweets.size() - 1);
 		this.feed.addTweet(tweet);
+	}
+
+	@Override
+	public int accept(Visitor visitor) {
+		return visitor.visit(this);
 	}
 }

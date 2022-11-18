@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.swing.tree.TreeNode;
 
+import src.utils.visitor.Visitor;
+
 /**
  * UserGroup functions as a non leaf node in the tree and as the composite part of the composite pattern.
  * I do not explicitly keep a list of users and groups. I feel that due to this being a tree, it implicity already has children that are entities, thus this is not a leaf.
@@ -43,5 +45,10 @@ public class UserGroup extends Entity {
 		}
 
 		return groups;
+	}
+
+	@Override
+	public int accept(Visitor visitor) {
+		return visitor.visit(this);
 	}
 }

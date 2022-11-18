@@ -129,15 +129,15 @@ public class AdminControlPanel extends JPanel {
 		layout.setConstraints(panel, constraints);
 		this.add(panel);
 
-		JButton b1 = new JButton("Show User Total");
+		JButton b1 = new JButton("Show User Count");
 		b1.addActionListener((AdminController.get().getUserCount()));
 		panel.add(b1);
 
-		JButton b2 = new JButton("Show Group Total");
+		JButton b2 = new JButton("Show Group Count");
 		b2.addActionListener((AdminController.get().getGroupCount()));
 		panel.add(b2);
 
-		JButton b3 = new JButton("Show Message Total");
+		JButton b3 = new JButton("Show Tweet Count");
 		b3.addActionListener((AdminController.get().getMessageCount()));
 		panel.add(b3);
 

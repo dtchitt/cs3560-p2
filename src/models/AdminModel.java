@@ -198,11 +198,11 @@ public class AdminModel {
 				tweets.addAll(user.getTweets());
 			}
 
-			for (Tweet tweet : tweets) {
-				if (tweet.accept(visitor)) {
-					count++;
-				}
-			}
+			// for (Tweet tweet : tweets) {
+			// 	if (tweet.accept(visitor)) {
+			// 		count++;
+			// 	}
+			// }
 
 			count /= tweets.size();
 			count *= 100;
