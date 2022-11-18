@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import src.ui.user.Feed;
+import src.utils.message.Feed;
 import src.utils.message.Tweet;
 import src.utils.observer.Observer;
 import src.utils.observer.Subject;
@@ -74,13 +74,17 @@ public class User extends Entity implements Subject, Observer {
 	}
 
 	/**
-	 * Add a tweet to the users personal tweet list and to their feed
+	 * Handle adding a tweet to users feed
+	 * @param msg the message of the tweet
+	 * @return the added tweet
 	 */
-	public void addTweet(String msg) {
+	public Tweet addTweet(String msg) {
 		Tweet tweet = new Tweet(msg, this);
 		this.tweets.add(tweet);
 		this.feed.addTweet(tweet);
 		this.notifyObservers();
+
+		return tweet;
 	}
 
 	/**
@@ -123,7 +127,8 @@ public class User extends Entity implements Subject, Observer {
 	 */
 	@Override
 	public void update(Subject subject) {
-		Tweet tweet = ((User) subject).getTweets().get(this.getTweets().size());
+		List<Tweet> subjectTweets =  ((User) subject).getTweets();
+		Tweet tweet = subjectTweets.get(subjectTweets.size() - 1);
 		this.feed.addTweet(tweet);
 	}
 }

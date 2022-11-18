@@ -1,6 +1,7 @@
 package src.ui.user;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -12,7 +13,6 @@ import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import javax.swing.DefaultListModel;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -31,7 +31,7 @@ import src.utils.message.Tweet;
 public class UserControlPanel extends JPanel {
 	private User user;
 	private JTextArea following;
-	private JTextArea feedArea;
+	private JList<String> feedArea;
 
 	public UserControlPanel(User user) {
 		super();
@@ -104,7 +104,7 @@ public class UserControlPanel extends JPanel {
 					this.following.append(targetUser.getIdName() + "\n");
 					this.following.repaint();
 				}
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				this.warningMessage("Invalid Entity");
@@ -184,17 +184,16 @@ public class UserControlPanel extends JPanel {
 
 		JButton button = new JButton("Post Tweet");
 
-		// button.addActionListener(event -> {
-		// try {
-		// Tweet tweet = new Tweet(inputArea.getText(), this.user);
-		// this.user.tweet(tweet);
-		// inputArea.setText(defaultString);
-		// this.update();
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// return;
-		// }
-		// });
+		button.addActionListener(event -> {
+			try {
+				this.user.addTweet(inputArea.getText());
+
+				inputArea.setText(defaultString);
+			} catch (Exception e) {
+				e.printStackTrace();
+				return;
+			}
+		});
 
 		panel.add(inputArea);
 		panel.add(button);
@@ -204,42 +203,12 @@ public class UserControlPanel extends JPanel {
 		constraints.gridy = 3;
 		constraints.gridx = 0;
 
-		this.feedArea = new JTextArea();
-		this.updateFeed();
+		this.feedArea = new JList<String>(this.user.getFeed());
 
 		layout.setConstraints(this.feedArea, constraints);
 		this.feedArea.setBackground(Color.WHITE);
 		this.feedArea.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
-		;
+
 		this.add(this.feedArea);
-	}
-
-	private void updateFeed() {
-		String feed = "Feed:\n";
-
-		List<Tweet> tweets = this.user.getTweets();
-
-		// for (User u : this.user.getFollowing()) {
-		// for (Tweet uTweet : u.getTweets()) {
-		// if (this.user.getFollowing().contains(uTweet.getUser())) {
-		// tweets.add(uTweet);
-		// }
-
-		// }
-		// }
-
-		Set<Tweet> uniqueTweets = new LinkedHashSet<Tweet>();
-		uniqueTweets.addAll(tweets);
-		tweets.clear();
-		tweets.addAll(uniqueTweets);
-
-		Collections.reverse(tweets);
-		for (Tweet tweet : this.user.getTweets()) {
-			feed += tweet.format() + "\n";
-		}
-
-		this.feedArea.setText(feed);
-		// this.feedArea.repaint();
-		this.feedArea.update(this.feedArea.getGraphics());
 	}
 }

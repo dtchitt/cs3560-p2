@@ -204,8 +204,6 @@ public class AdminModel {
 				}
 			}
 
-			// System.out.println(count);
-			// System.out.println(tweets.size());
 			count /= tweets.size();
 			count *= 100;
 
