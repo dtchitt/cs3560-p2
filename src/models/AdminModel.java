@@ -233,13 +233,11 @@ public class AdminModel {
 	}
 
 	private void addUserToTree(EntityTree tree, UserGroup rootGroup, User user) {
-		// rootGroup.addUser(user);
 		rootGroup.add(user);
 		this.tree.render(rootGroup);
 	}
 
 	private void addGroupToTree(EntityTree tree, UserGroup rootGroup, UserGroup uGroup) {
-		// rootGroup.addGroup(uGroup);
 		rootGroup.add(uGroup);
 		this.tree.render(rootGroup);
 	}

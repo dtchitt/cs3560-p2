@@ -5,12 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.plaf.DimensionUIResource;
-
-import java.awt.Color;
 
 /**
  * This class is used to control and maintain the news feed of a user

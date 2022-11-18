@@ -1,7 +1,6 @@
 package src.ui.user;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -13,14 +12,8 @@ import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import src.controllers.AdminController;
 import src.utils.composite.User;
-import src.utils.message.Tweet;
 
 /**
  * Okay honestly I was rushing and this is really messy, sorry
