@@ -1,10 +1,7 @@
 package src.ui.admin;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.plaf.DimensionUIResource;
@@ -16,9 +13,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.image.BufferedImage;
-import java.awt.Image;
-import java.io.File;
 import java.awt.Color;
 
 /**
@@ -31,7 +25,7 @@ import java.awt.Color;
  */
 public class AdminControlPanel extends JPanel {
 	private final Color BACKGROUND_COLOR = new Color(0, 105, 175);
-	private final String LOGO_PATH = "media/main_logo.png";
+	//private final String LOGO_PATH = "";
 
 	public AdminControlPanel() {
 		super();
@@ -114,16 +108,16 @@ public class AdminControlPanel extends JPanel {
 		panel.setBackground(Color.LIGHT_GRAY);
 		layout.setConstraints(panel, constraints);
 
-		try {
-			BufferedImage img = ImageIO.read(new File(LOGO_PATH));
-			Image scaledImage = img.getScaledInstance(500, 280, Image.SCALE_SMOOTH);
-			ImageIcon icon = new ImageIcon(scaledImage);
-			JLabel label = new JLabel(icon);
-			label.setSize(350, 210);
-			panel.add(label);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// try {
+		// 	BufferedImage img = ImageIO.read(new File(LOGO_PATH));
+		// 	Image scaledImage = img.getScaledInstance(500, 280, Image.SCALE_SMOOTH);
+		// 	ImageIcon icon = new ImageIcon(scaledImage);
+		// 	JLabel label = new JLabel(icon);
+		// 	label.setSize(350, 210);
+		// 	panel.add(label);
+		// } catch (Exception e) {
+		// 	e.printStackTrace();
+		// }
 
 		this.add(panel);
 	}
@@ -135,15 +129,15 @@ public class AdminControlPanel extends JPanel {
 		layout.setConstraints(panel, constraints);
 		this.add(panel);
 
-		JButton b1 = new JButton("Show User Total");
+		JButton b1 = new JButton("Show User Count");
 		b1.addActionListener((AdminController.get().getUserCount()));
 		panel.add(b1);
 
-		JButton b2 = new JButton("Show Group Total");
+		JButton b2 = new JButton("Show Group Count");
 		b2.addActionListener((AdminController.get().getGroupCount()));
 		panel.add(b2);
 
-		JButton b3 = new JButton("Show Message Total");
+		JButton b3 = new JButton("Show Tweet Count");
 		b3.addActionListener((AdminController.get().getMessageCount()));
 		panel.add(b3);
 
@@ -151,9 +145,13 @@ public class AdminControlPanel extends JPanel {
 		b4.addActionListener((AdminController.get().getPositivityPercent()));
 		panel.add(b4);
 
-		// JButton b5 = new JButton("Validate Entities");
-		// JButton b6 = new JButton("Get Last Updated User");
-		// panel.add(b6);
-		// panel.add(b5);
+		JButton b5 = new JButton("Validate Entities");
+		b5.addActionListener((AdminController.get().validateEntities()));
+		panel.add(b5);
+
+		JButton b6 = new JButton("Get Last Updated User");
+		b6.addActionListener((AdminController.get().getLastUpdatedUser()));
+		panel.add(b6);
+
 	}
 }

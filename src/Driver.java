@@ -10,7 +10,7 @@ import src.ui.admin.AdminView;
 public class Driver {
 	public static void main(String[] args) {
 		try {
-			new AdminView("Admin Panel - MySpaceTom");
+			new AdminView("Admin Panel");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

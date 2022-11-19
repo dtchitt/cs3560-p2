@@ -2,6 +2,7 @@ package src.ui.user;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -11,15 +12,8 @@ import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import src.controllers.AdminController;
-import src.utils.entity.User;
-import src.utils.message.Tweet;
-import src.utils.observer.Observer;
+import src.utils.composite.User;
 
 /**
  * Okay honestly I was rushing and this is really messy, sorry
@@ -27,10 +21,10 @@ import src.utils.observer.Observer;
  * The control panel is what actually observes users feeds so it knows when to
  * update
  */
-public class UserControlPanel extends JPanel implements Observer {
+public class UserControlPanel extends JPanel {
 	private User user;
 	private JTextArea following;
-	private JTextArea feedArea;
+	private JList<String> feedArea;
 
 	public UserControlPanel(User user) {
 		super();
@@ -96,33 +90,42 @@ public class UserControlPanel extends JPanel implements Observer {
 
 		button.addActionListener(event -> {
 			try {
-				User userNode = AdminController.get().model().tree().getUser(inputArea.getText());
+				User targetUser = AdminController.get().model().tree().getUser(inputArea.getText());
 
-				if (this.user.getFollowing().contains(userNode)) {
-					JOptionPane.showMessageDialog(null, "You are already following that user!", "",
-							JOptionPane.WARNING_MESSAGE);
-					return;
+				if (canFollowUser(targetUser)) {
+					this.user.followUser(targetUser);
+					this.following.append(targetUser.getIdName() + "\n");
+					this.following.repaint();
 				}
-
-				if (this.user == userNode) {
-					JOptionPane.showMessageDialog(null, "You cannot follow yourself!", "", JOptionPane.WARNING_MESSAGE);
-					return;
-				}
-
-				this.user.addfollowing(userNode);
-				this.following.append(userNode.getIdName() + "\n");
-
-				userNode.addFollower(user);
-				userNode.getFeed().attach(this);
 
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Invalid Entity", "", JOptionPane.INFORMATION_MESSAGE);
-				return;
+				e.printStackTrace();
+				this.warningMessage("Invalid Entity");
 			}
 		});
 
 		panel.add(inputArea);
 		panel.add(button);
+	}
+
+	private boolean canFollowUser(User targetUser) {
+		boolean result = true;
+
+		if (this.user.isFollowing(targetUser)) {
+			this.warningMessage("You are already following that user!");
+			result = false;
+		}
+
+		if (this.user.equals(targetUser)) {
+			this.warningMessage("You cannot follow yourself!");
+			result = false;
+		}
+
+		return result;
+	}
+
+	private void warningMessage(String msg) {
+		JOptionPane.showMessageDialog(null, msg, "", JOptionPane.WARNING_MESSAGE);
 	}
 
 	private void buildFollowingView(GridBagLayout layout, GridBagConstraints constraints) {
@@ -176,10 +179,9 @@ public class UserControlPanel extends JPanel implements Observer {
 
 		button.addActionListener(event -> {
 			try {
-				Tweet tweet = new Tweet(inputArea.getText(), this.user);
-				this.user.tweet(tweet);
+				this.user.addTweet(inputArea.getText());
+
 				inputArea.setText(defaultString);
-				this.update();
 			} catch (Exception e) {
 				e.printStackTrace();
 				return;
@@ -194,47 +196,12 @@ public class UserControlPanel extends JPanel implements Observer {
 		constraints.gridy = 3;
 		constraints.gridx = 0;
 
-		this.feedArea = new JTextArea();
-		this.update();
+		this.feedArea = new JList<String>(this.user.getFeed());
 
 		layout.setConstraints(this.feedArea, constraints);
 		this.feedArea.setBackground(Color.WHITE);
 		this.feedArea.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
-		;
+
 		this.add(this.feedArea);
-	}
-
-	private void updateFeed() {
-		String feed = "Feed:\n";
-
-		List<Tweet> tweets = this.user.getTweets();
-
-		for (User u : this.user.getFollowing()) {
-			for (Tweet uTweet : u.getTweets()) {
-				if (this.user.getFollowing().contains(uTweet.getUser())) {
-					tweets.add(uTweet);
-				}
-
-			}
-		}
-
-		Set<Tweet> uniqueTweets = new LinkedHashSet<Tweet>();
-		uniqueTweets.addAll(tweets);
-		tweets.clear();
-		tweets.addAll(uniqueTweets);
-
-		Collections.reverse(tweets);
-		for (Tweet tweet : this.user.getTweets()) {
-			feed += tweet.format() + "\n";
-		}
-
-		this.feedArea.setText(feed);
-		// this.feedArea.repaint();
-		this.feedArea.update(this.feedArea.getGraphics());
-	}
-
-	@Override
-	public void update() {
-		this.updateFeed();
 	}
 }

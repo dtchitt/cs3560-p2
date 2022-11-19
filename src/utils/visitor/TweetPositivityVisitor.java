@@ -1,7 +1,7 @@
 package src.utils.visitor;
 
-import java.util.Arrays;
-
+import src.utils.composite.User;
+import src.utils.composite.UserGroup;
 import src.utils.message.Tweet;
 
 /**
@@ -11,16 +11,22 @@ public class TweetPositivityVisitor implements Visitor {
 	public static final String[] POSITIVE_WORDS = {"awesome", "nice", "good", "love", "happy", "lit"};
 
 	@Override
-	public boolean visit(Tweet tweet) {
-		String[] words = tweet.getMessage().split(" ");
+	public int visit(User user) {
+		int count = 0;
 
-		for (String word : words) {
-			if (Arrays.asList(POSITIVE_WORDS).contains(word.toLowerCase())) {
-				return true;
+		for (Tweet tweet : user.getTweets()) {
+			for (int i = 0; i < POSITIVE_WORDS.length; i++) {
+				if (tweet.getMessage().contains(POSITIVE_WORDS[i])) {
+					count++;
+				}
 			}
 		}
 
-		return false;
+		return count;
 	}
-	
+
+	@Override
+	public int visit(UserGroup group) {
+		return 0;
+	}
 }

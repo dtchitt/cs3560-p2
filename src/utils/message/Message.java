@@ -1,7 +1,7 @@
 package src.utils.message;
 
 import src.utils.TimeStamp;
-import src.utils.entity.User;
+import src.utils.composite.User;
 
 /**
  * This class was made to help be more OOP, every message time will have a string, timestap, and user

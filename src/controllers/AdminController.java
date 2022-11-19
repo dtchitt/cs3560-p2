@@ -56,4 +56,12 @@ public class AdminController {
 	public ActionListener getPositivityPercent() {
 		return this.model.getPositivityPercent();
 	}
+
+	public ActionListener validateEntities() {
+		return this.model.validateEntities();
+	}
+
+	public ActionListener getLastUpdatedUser() {
+		return this.model.getLastUpdatedUser();
+	}
 }

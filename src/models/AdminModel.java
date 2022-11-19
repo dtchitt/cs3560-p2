@@ -3,14 +3,17 @@ package src.models;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.tree.TreePath;
+
 import src.controllers.EntityTree;
 import src.ui.user.UserView;
-import src.utils.entity.User;
-import src.utils.entity.UserGroup;
-import src.utils.message.Tweet;
+import src.utils.composite.User;
+import src.utils.composite.UserGroup;
+import src.utils.visitor.MessageCountVisitor;
 import src.utils.visitor.TweetPositivityVisitor;
 
 import java.awt.event.ActionListener;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,10 +24,19 @@ import java.util.Set;
 public class AdminModel {
 	private final UserGroup rootGroup;
 	private final EntityTree tree;
+	private final Set<UserGroup> groups;
+	private final Set<User> users;
 
 	public AdminModel() {
 		this.rootGroup = new UserGroup("root");
 		this.tree = new EntityTree(this.rootGroup);
+		this.groups = new HashSet<UserGroup>();
+		this.users = new HashSet<User>();
+
+		this.groups.add(rootGroup);
+		addUserToTree(tree, rootGroup, new User("Tom"));
+		this.tree.render(rootGroup);
+		this.tree.expandPath(new TreePath(rootGroup.getPath()));
 	}
 
 	public UserGroup rootGroup() {
@@ -51,9 +63,9 @@ public class AdminModel {
 			}
 
 			// get the node or its parent
+			UserGroup rootGroup = this.rootGroup;
 			Object object = getSelectedNode();
 
-			UserGroup rootGroup = this.rootGroup;
 			if (EntityTree.nodeFromObject(object) == null) {
 				rootGroup = this.rootGroup;
 			} else {
@@ -61,6 +73,7 @@ public class AdminModel {
 			}
 
 			// Add group or user based on button used
+			// I could remove this switch with OOP, but seems overkill for this project
 			JButton buttonPressed = (JButton) event.getSource();
 			switch (buttonPressed.getText()) {
 				case "Create Group":
@@ -74,15 +87,22 @@ public class AdminModel {
 				default:
 					break;
 			}
+
+			inputArea.setText("Enter Entity ID");
 		};
 	}
 
 	private Object getSelectedNode() {
 		Object object = this.tree.getLastSelectedPathComponent();
 
+		if (object == null) {
+			return null;
+		}
+
 		if (!EntityTree.nodeFromObject(object).getAllowsChildren()) {
 			object = EntityTree.nodeFromObject(object).getParent();
 		}
+
 		return object;
 	}
 
@@ -98,48 +118,10 @@ public class AdminModel {
 			if (object instanceof User) {
 				new UserView((User) object);
 			} else {
-				JOptionPane.showMessageDialog(null, "No User Selected!", "", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "No User Selected!", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 		};
-	}
-
-	/**
-	 * Logic to get and return all users in the system
-	 * 
-	 * @param group
-	 * @return
-	 */
-	public Set<User> getUsers(UserGroup group) {
-		Set<User> allUsers = new HashSet<User>();
-
-		for (User u : group.getUsers()) {
-			allUsers.add(u);
-		}
-
-		for (UserGroup subGroup : group.getGroups()) {
-			allUsers.addAll(this.getUsers(subGroup));
-		}
-
-		return allUsers;
-	}
-
-	/**
-	 * Logic to get and return all groups in the system
-	 * including root group
-	 * 
-	 * @param group
-	 * @return
-	 */
-	public Set<UserGroup> getUserGroups(UserGroup group) {
-		Set<UserGroup> allGroups = new HashSet<UserGroup>();
-		allGroups.add(group);
-
-		for (UserGroup subGroups : group.getGroups()) {
-			allGroups.addAll(this.getUserGroups(subGroups));
-		}
-
-		return allGroups;
 	}
 
 	/**
@@ -149,7 +131,8 @@ public class AdminModel {
 	 */
 	public ActionListener getUserCount() {
 		return event -> {
-			int count = this.getUsers(this.rootGroup).size();
+			int count = this.users.size();
+
 			JOptionPane.showMessageDialog(null, "Total Users: " + count, "", JOptionPane.INFORMATION_MESSAGE);
 		};
 	}
@@ -161,7 +144,8 @@ public class AdminModel {
 	 */
 	public ActionListener getGroupCount() {
 		return event -> {
-			int count = this.getUserGroups(this.rootGroup).size();
+			int count = this.groups.size();
+
 			JOptionPane.showMessageDialog(null, "Total Groups: " + count, "", JOptionPane.INFORMATION_MESSAGE);
 		};
 	}
@@ -173,11 +157,12 @@ public class AdminModel {
 	 */
 	public ActionListener getMessageCount() {
 		return event -> {
-			Set<User> users = this.getUsers(this.rootGroup);
+			MessageCountVisitor visitor = new MessageCountVisitor();
 
 			int count = 0;
-			for (User user : users) {
-				count += user.getTweets().size();
+
+			for (User user : this.users) {
+				count += user.accept(visitor);
 			}
 
 			JOptionPane.showMessageDialog(null, "Total Messages: " + count, "", JOptionPane.INFORMATION_MESSAGE);
@@ -191,29 +176,83 @@ public class AdminModel {
 	 */
 	public ActionListener getPositivityPercent() {
 		return event -> {
-			Set<User> users = this.getUsers(this.rootGroup);
-			Set<Tweet> tweets = new HashSet<Tweet>();
 			TweetPositivityVisitor visitor = new TweetPositivityVisitor();
 
 			double count = 0;
-			for (User user : users) {
-				tweets.addAll(user.getTweets());
+			int totalTweets = 0;
+
+			for (User user : this.users) {
+				totalTweets += user.getTweetCount();
+				count += user.accept(visitor);
 			}
 
-			for (Tweet tweet : tweets) {
-				if (tweet.accept(visitor)) {
-					count++;
+			count /= totalTweets;
+			count *= 100;
+
+			JOptionPane.showMessageDialog(null, "Positive Tweet % " + count, "", JOptionPane.INFORMATION_MESSAGE);
+		};
+	}
+
+	/**
+	 * This will validate all entities
+	 * Entities are valid under 2 conditions
+	 * #1 They have no spaces in their unique ID (this is already taken care of upon User creation)
+	 * #2 There is not copies of any entities. We know there is no copies of entities because all users/groups that are created are also stored in a Set
+	 * Just to be safe, I count the total nodes in tree and compare that to the set of user and user of usergroups sizes added together
+	 * @return
+	 */
+	public ActionListener validateEntities() {
+		return event -> {
+			boolean isValid = true;
+
+			for (UserGroup userGroup : groups) {
+				if (this.hasSpaces(userGroup.getUniqueID())) {
+					isValid = false;
+				}
+
+				for (User user : userGroup.getUsers()) {
+					if (this.hasSpaces(user.getUniqueID())) {
+						isValid = false;
+					}
 				}
 			}
 
-			System.out.println(count);
-			System.out.println(tweets.size());
-			count /= tweets.size();
-			count *= 100;
+			int nodeCount = 0;
+			Enumeration e = this.rootGroup.breadthFirstEnumeration();
+			while (e.hasMoreElements()) {
+				nodeCount++;
+				e.nextElement();
+			}
 
-			JOptionPane.showMessageDialog(null, "Tweet Positivity Percent: " + count, "",
-					JOptionPane.INFORMATION_MESSAGE);
+			if (nodeCount != (this.groups.size() + this.users.size())) {
+				isValid = false;
+			}
+
+			JOptionPane.showMessageDialog(null, "Are Entities Valid: " + isValid, "", JOptionPane.INFORMATION_MESSAGE);
 		};
+    }
+
+    public ActionListener getLastUpdatedUser() {
+		return event -> {
+			User lastUpdated = null;
+
+			for (User user : this.users) {
+				if (lastUpdated == null) {
+					lastUpdated = user;
+				}
+
+				long currTime = System.currentTimeMillis();
+				if (user.getLastUpdate() - currTime > lastUpdated.getLastUpdate() - currTime) {
+					lastUpdated = user;
+				}
+			}
+
+			JOptionPane.showMessageDialog(null, "Last updated User: " + lastUpdated.getUniqueID(), "", JOptionPane.INFORMATION_MESSAGE);
+		};
+    }
+
+	private boolean hasSpaces(String str) {
+		return str.contains(" ");
 	}
 
 	/**
@@ -237,13 +276,13 @@ public class AdminModel {
 	}
 
 	private void addUserToTree(EntityTree tree, UserGroup rootGroup, User user) {
-		rootGroup.addUser(user);
+		this.users.add(user);
 		rootGroup.add(user);
 		this.tree.render(rootGroup);
 	}
 
 	private void addGroupToTree(EntityTree tree, UserGroup rootGroup, UserGroup uGroup) {
-		rootGroup.addGroup(uGroup);
+		this.groups.add(uGroup);
 		rootGroup.add(uGroup);
 		this.tree.render(rootGroup);
 	}

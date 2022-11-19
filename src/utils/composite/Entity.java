@@ -1,20 +1,24 @@
-package src.utils.entity;
+package src.utils.composite;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import src.utils.TimeStamp;
 import src.utils.UniqueID;
+import src.utils.visitor.Visitable;
 
 /**
- * Entity servers as "sysEntry" as your video says. I decided to make entity a defaultMutableTreenode because it makes working with the tree easier.
- * Entities also have a uniqueID and a timestamp.
+ * Entity is the component in the composite pattern.
+ * It is a DefaultMutableTreeNode, which makes this entire project alot easier.
+ * It allows me to manipulate the entire entity list and find users/groups with built in functionality
  */
-public abstract class Entity extends DefaultMutableTreeNode {
+public abstract class Entity extends DefaultMutableTreeNode implements Visitable {
+	//I think a has-a relation is better for id and time stamp.
 	private UniqueID id;
 	private TimeStamp timeStamp;
 
 	public Entity(String id) {
 		super();
+		
 		this.id = new UniqueID(id);
 		this.timeStamp = new TimeStamp();
 	}
@@ -55,9 +59,13 @@ public abstract class Entity extends DefaultMutableTreeNode {
 		return this.timeStamp.getCreationStamp();
 	}
 
+	public String getCreationDate() {
+		return this.timeStamp.getCreationDate();
+	}
+
 	//TODO instead of using this to get node name figure out a better way
 	@Override
 	public String toString() {
-		return this.getIdName();
+		return this.getUniqueID();
 	}
 }

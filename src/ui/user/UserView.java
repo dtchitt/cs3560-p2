@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.plaf.DimensionUIResource;
 
-import src.utils.entity.User;
+import src.utils.composite.User;
 
 /**
  * This creates the user view window when the open view button is clicked
@@ -14,7 +14,7 @@ import src.utils.entity.User;
 public class UserView extends JFrame {
 
 	public UserView(User user) {
-		super(user.getIdName());
+		super(user.getIdName() + " Created @ " + user.getCreationDate());
 		//User view will only close the user view window on exit
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);

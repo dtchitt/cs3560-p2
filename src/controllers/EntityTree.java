@@ -7,8 +7,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import src.utils.entity.User;
-import src.utils.entity.UserGroup;
+
+import src.utils.composite.User;
+import src.utils.composite.UserGroup;
+
 import java.awt.Component;
 
 /**
@@ -19,11 +21,6 @@ public class EntityTree extends JTree {
 		super();
 
 		this.setModel(new DefaultTreeModel(rootGroup));
-		// Add Tom, good ol myspace
-		rootGroup.addUser(new User("Tom"));
-		this.render(rootGroup);
-		this.expandPath(new TreePath(rootGroup.getPath()));
-
 		this.setRenderer();
 	}
 
@@ -35,20 +32,23 @@ public class EntityTree extends JTree {
 		return (DefaultMutableTreeNode) path.getLastPathComponent();
 	}
 
-	// private DefaultTreeModel getDefaultModel() {
-	// 	return ((DefaultTreeModel) this.getModel());
-	// }
-
 	public void render(UserGroup rootNode) {
 		DefaultTreeModel treeModel = (DefaultTreeModel) this.getModel();
 		treeModel.nodesWereInserted(rootNode, new int[] { rootNode.getChildCount() - 1 });
 	}
 
 	public User getUser(String id) {
-		this.getModel().getChild(id, UNDEFINED_CONDITION);
 		TreePath path = this.getNextMatch(id, 0, Position.Bias.Forward);
-		DefaultMutableTreeNode node = EntityTree.nodeFromPath(path);
-		return (User) node;
+
+		if (path != null) {
+			DefaultMutableTreeNode node = EntityTree.nodeFromPath(path);
+
+			if (!node.getAllowsChildren()) {
+				return (User) node;
+			}
+		}
+
+		return null;
 	}
 
 	/**
