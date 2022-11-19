@@ -21,11 +21,6 @@ public class EntityTree extends JTree {
 		super();
 
 		this.setModel(new DefaultTreeModel(rootGroup));
-		// Add Tom, good ol myspace
-		rootGroup.add(new User("Tom"));
-		this.render(rootGroup);
-		this.expandPath(new TreePath(rootGroup.getPath()));
-
 		this.setRenderer();
 	}
 
@@ -36,10 +31,6 @@ public class EntityTree extends JTree {
 	public static DefaultMutableTreeNode nodeFromPath(TreePath path) {
 		return (DefaultMutableTreeNode) path.getLastPathComponent();
 	}
-
-	// private DefaultTreeModel getDefaultModel() {
-	// 	return ((DefaultTreeModel) this.getModel());
-	// }
 
 	public void render(UserGroup rootNode) {
 		DefaultTreeModel treeModel = (DefaultTreeModel) this.getModel();

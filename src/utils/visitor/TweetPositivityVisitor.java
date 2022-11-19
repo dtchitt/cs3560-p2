@@ -12,27 +12,21 @@ public class TweetPositivityVisitor implements Visitor {
 
 	@Override
 	public int visit(User user) {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+
+		for (Tweet tweet : user.getTweets()) {
+			for (int i = 0; i < POSITIVE_WORDS.length; i++) {
+				if (tweet.getMessage().contains(POSITIVE_WORDS[i])) {
+					count++;
+				}
+			}
+		}
+
+		return count;
 	}
 
 	@Override
 	public int visit(UserGroup group) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
-
-	// @Override
-	// public int visit(Tweet tweet) {
-	// 	String[] words = tweet.getMessage().split(" ");
-
-	// 	for (String word : words) {
-	// 		if (Arrays.asList(POSITIVE_WORDS).contains(word.toLowerCase())) {
-	// 			return true;
-	// 		}
-	// 	}
-
-	// 	return false;
-	// }
-	
 }

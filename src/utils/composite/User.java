@@ -105,6 +105,14 @@ public class User extends Entity implements Subject, Observer {
 	}
 
 	/**
+	 * Gets the total amount of tweets from this user
+	 * @return an integer representing how many tweets this user has made
+	 */
+	public int getTweetCount() {
+		return this.tweets.size();
+	}
+
+	/**
 	 * Attach an observer to this subject
 	 */
 	@Override

@@ -3,11 +3,13 @@ package src.models;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.tree.TreePath;
+
 import src.controllers.EntityTree;
 import src.ui.user.UserView;
 import src.utils.composite.User;
 import src.utils.composite.UserGroup;
-import src.utils.message.Tweet;
+import src.utils.visitor.MessageCountVisitor;
 import src.utils.visitor.TweetPositivityVisitor;
 
 import java.awt.event.ActionListener;
@@ -21,10 +23,19 @@ import java.util.Set;
 public class AdminModel {
 	private final UserGroup rootGroup;
 	private final EntityTree tree;
+	private final Set<UserGroup> groups;
+	private final Set<User> users;
 
 	public AdminModel() {
 		this.rootGroup = new UserGroup("root");
 		this.tree = new EntityTree(this.rootGroup);
+		this.groups = new HashSet<UserGroup>();
+		this.users = new HashSet<User>();
+
+		this.groups.add(rootGroup);
+		addUserToTree(tree, rootGroup, new User("Tom"));
+		this.tree.render(rootGroup);
+		this.tree.expandPath(new TreePath(rootGroup.getPath()));
 	}
 
 	public UserGroup rootGroup() {
@@ -106,38 +117,10 @@ public class AdminModel {
 			if (object instanceof User) {
 				new UserView((User) object);
 			} else {
-				JOptionPane.showMessageDialog(null, "No User Selected!", "", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "No User Selected!", "", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
 		};
-	}
-
-	/**
-	 * Logic to get and return all users in the system
-	 * 
-	 * @param group
-	 * @return
-	 */
-	public Set<User> getUsers(UserGroup group) {
-		return this.rootGroup.getUsers();
-	}
-
-	/**
-	 * Logic to get and return all groups in the system
-	 * including root group
-	 * 
-	 * @param group
-	 * @return
-	 */
-	public Set<UserGroup> getUserGroups(UserGroup group) {
-		Set<UserGroup> allGroups = new HashSet<UserGroup>();
-		allGroups.add(group);
-
-		// for (UserGroup subGroups : group.getGroups()) {
-		// allGroups.addAll(this.getUserGroups(subGroups));
-		// }
-
-		return allGroups;
 	}
 
 	/**
@@ -147,7 +130,8 @@ public class AdminModel {
 	 */
 	public ActionListener getUserCount() {
 		return event -> {
-			int count = this.getUsers(this.rootGroup).size();
+			int count = this.users.size();
+
 			JOptionPane.showMessageDialog(null, "Total Users: " + count, "", JOptionPane.INFORMATION_MESSAGE);
 		};
 	}
@@ -159,7 +143,8 @@ public class AdminModel {
 	 */
 	public ActionListener getGroupCount() {
 		return event -> {
-			int count = this.getUserGroups(this.rootGroup).size();
+			int count = this.groups.size();
+
 			JOptionPane.showMessageDialog(null, "Total Groups: " + count, "", JOptionPane.INFORMATION_MESSAGE);
 		};
 	}
@@ -171,11 +156,12 @@ public class AdminModel {
 	 */
 	public ActionListener getMessageCount() {
 		return event -> {
-			Set<User> users = this.getUsers(this.rootGroup);
+			MessageCountVisitor visitor = new MessageCountVisitor();
 
 			int count = 0;
-			for (User user : users) {
-				count += user.getTweets().size();
+
+			for (User user : this.users) {
+				count += user.accept(visitor);
 			}
 
 			JOptionPane.showMessageDialog(null, "Total Messages: " + count, "", JOptionPane.INFORMATION_MESSAGE);
@@ -189,26 +175,20 @@ public class AdminModel {
 	 */
 	public ActionListener getPositivityPercent() {
 		return event -> {
-			Set<User> users = this.getUsers(this.rootGroup);
-			Set<Tweet> tweets = new HashSet<Tweet>();
 			TweetPositivityVisitor visitor = new TweetPositivityVisitor();
 
 			double count = 0;
-			for (User user : users) {
-				tweets.addAll(user.getTweets());
+			int totalTweets = 0;
+
+			for (User user : this.users) {
+				totalTweets += user.getTweetCount();
+				count += user.accept(visitor);
 			}
-
-			// for (Tweet tweet : tweets) {
-			// 	if (tweet.accept(visitor)) {
-			// 		count++;
-			// 	}
-			// }
-
-			count /= tweets.size();
+			
+			count /= totalTweets;
 			count *= 100;
 
-			JOptionPane.showMessageDialog(null, "Tweet Positivity Percent: " + count, "",
-					JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Positive Tweet % " + count, "", JOptionPane.INFORMATION_MESSAGE);
 		};
 	}
 
@@ -233,11 +213,13 @@ public class AdminModel {
 	}
 
 	private void addUserToTree(EntityTree tree, UserGroup rootGroup, User user) {
+		this.users.add(user);
 		rootGroup.add(user);
 		this.tree.render(rootGroup);
 	}
 
 	private void addGroupToTree(EntityTree tree, UserGroup rootGroup, UserGroup uGroup) {
+		this.groups.add(uGroup);
 		rootGroup.add(uGroup);
 		this.tree.render(rootGroup);
 	}
