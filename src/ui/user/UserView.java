@@ -14,7 +14,7 @@ import src.utils.composite.User;
 public class UserView extends JFrame {
 
 	public UserView(User user) {
-		super(user.getIdName());
+		super(user.getIdName() + " Created @ " + user.getCreationDate());
 		//User view will only close the user view window on exit
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);

@@ -22,6 +22,7 @@ public class User extends Entity implements Subject, Observer {
 	private Set<User> following; // subjects
 	private List<Tweet> tweets; // tweets by this user
 	private Feed feed;
+	private long lastUpdate;
 
 	public User(String uniqueID) {
 		super(uniqueID);
@@ -30,7 +31,7 @@ public class User extends Entity implements Subject, Observer {
 		this.following = new LinkedHashSet<>();
 		this.tweets = new ArrayList<>();
 		this.feed = new Feed();
-
+		this.lastUpdate = this.getCreationStamp();
 		// Forces Users to be a leaf in the tree
 		this.allowsChildren = false;
 	}
@@ -74,6 +75,13 @@ public class User extends Entity implements Subject, Observer {
 	}
 
 	/**
+	 * Gets the most recent update time
+	 */
+	public long getLastUpdate() {
+		return lastUpdate;
+	}
+
+	/**
 	 * Handle adding a tweet to users feed
 	 * @param msg the message of the tweet
 	 * @return the added tweet
@@ -83,6 +91,8 @@ public class User extends Entity implements Subject, Observer {
 		this.tweets.add(tweet);
 		this.feed.addTweet(tweet);
 		this.notifyObservers();
+		this.setUpdateStamp();
+		this.lastUpdate = this.getUpdateStamp();
 
 		return tweet;
 	}

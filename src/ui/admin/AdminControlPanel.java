@@ -145,9 +145,13 @@ public class AdminControlPanel extends JPanel {
 		b4.addActionListener((AdminController.get().getPositivityPercent()));
 		panel.add(b4);
 
-		// JButton b5 = new JButton("Validate Entities");
-		// JButton b6 = new JButton("Get Last Updated User");
-		// panel.add(b6);
-		// panel.add(b5);
+		JButton b5 = new JButton("Validate Entities");
+		b5.addActionListener((AdminController.get().validateEntities()));
+		panel.add(b5);
+
+		JButton b6 = new JButton("Get Last Updated User");
+		b6.addActionListener((AdminController.get().getLastUpdatedUser()));
+		panel.add(b6);
+
 	}
 }

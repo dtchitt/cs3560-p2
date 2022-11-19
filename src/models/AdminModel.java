@@ -13,6 +13,7 @@ import src.utils.visitor.MessageCountVisitor;
 import src.utils.visitor.TweetPositivityVisitor;
 
 import java.awt.event.ActionListener;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -184,12 +185,74 @@ public class AdminModel {
 				totalTweets += user.getTweetCount();
 				count += user.accept(visitor);
 			}
-			
+
 			count /= totalTweets;
 			count *= 100;
 
 			JOptionPane.showMessageDialog(null, "Positive Tweet % " + count, "", JOptionPane.INFORMATION_MESSAGE);
 		};
+	}
+
+	/**
+	 * This will validate all entities
+	 * Entities are valid under 2 conditions
+	 * #1 They have no spaces in their unique ID (this is already taken care of upon User creation)
+	 * #2 There is not copies of any entities. We know there is no copies of entities because all users/groups that are created are also stored in a Set
+	 * Just to be safe, I count the total nodes in tree and compare that to the set of user and user of usergroups sizes added together
+	 * @return
+	 */
+	public ActionListener validateEntities() {
+		return event -> {
+			boolean isValid = true;
+
+			for (UserGroup userGroup : groups) {
+				if (this.hasSpaces(userGroup.getUniqueID())) {
+					isValid = false;
+				}
+
+				for (User user : userGroup.getUsers()) {
+					if (this.hasSpaces(user.getUniqueID())) {
+						isValid = false;
+					}
+				}
+			}
+
+			int nodeCount = 0;
+			Enumeration e = this.rootGroup.breadthFirstEnumeration();
+			while (e.hasMoreElements()) {
+				nodeCount++;
+				e.nextElement();
+			}
+
+			if (nodeCount != (this.groups.size() + this.users.size())) {
+				isValid = false;
+			}
+
+			JOptionPane.showMessageDialog(null, "Are Entities Valid: " + isValid, "", JOptionPane.INFORMATION_MESSAGE);
+		};
+    }
+
+    public ActionListener getLastUpdatedUser() {
+		return event -> {
+			User lastUpdated = null;
+
+			for (User user : this.users) {
+				if (lastUpdated == null) {
+					lastUpdated = user;
+				}
+
+				long currTime = System.currentTimeMillis();
+				if (user.getLastUpdate() - currTime > lastUpdated.getLastUpdate() - currTime) {
+					lastUpdated = user;
+				}
+			}
+
+			JOptionPane.showMessageDialog(null, "Last updated User: " + lastUpdated.getUniqueID(), "", JOptionPane.INFORMATION_MESSAGE);
+		};
+    }
+
+	private boolean hasSpaces(String str) {
+		return str.contains(" ");
 	}
 
 	/**
