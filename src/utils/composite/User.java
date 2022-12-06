@@ -49,6 +49,7 @@ public class User extends Entity implements Subject, Observer {
 
 	/**
 	 * Checks if a user is being followed by this user
+	 * 
 	 * @param user the user to check if following
 	 * @return true if following passed in user
 	 */
@@ -58,6 +59,7 @@ public class User extends Entity implements Subject, Observer {
 
 	/**
 	 * Gets all the users this user is following
+	 * 
 	 * @return A set of all users being followed
 	 */
 	public Set<User> getFollowing() {
@@ -75,6 +77,15 @@ public class User extends Entity implements Subject, Observer {
 	}
 
 	/**
+	 * Gets all the users following this user
+	 * 
+	 * @return A set of all users following
+	 */
+	public Set<User> getFollowers() {
+		return following;
+	}
+
+	/**
 	 * Gets the most recent update time
 	 */
 	public long getLastUpdate() {
@@ -83,6 +94,7 @@ public class User extends Entity implements Subject, Observer {
 
 	/**
 	 * Handle adding a tweet to users feed
+	 * 
 	 * @param msg the message of the tweet
 	 * @return the added tweet
 	 */
@@ -108,6 +120,7 @@ public class User extends Entity implements Subject, Observer {
 
 	/**
 	 * Gets the list of tweets made by this user
+	 * 
 	 * @return a list of tweets
 	 */
 	public List<Tweet> getTweets() {
@@ -116,6 +129,7 @@ public class User extends Entity implements Subject, Observer {
 
 	/**
 	 * Gets the total amount of tweets from this user
+	 * 
 	 * @return an integer representing how many tweets this user has made
 	 */
 	public int getTweetCount() {
@@ -145,7 +159,8 @@ public class User extends Entity implements Subject, Observer {
 	 */
 	@Override
 	public void update(Subject subject) {
-		List<Tweet> subjectTweets =  ((User) subject).getTweets();
+		this.setUpdateStamp();
+		List<Tweet> subjectTweets = ((User) subject).getTweets();
 		Tweet tweet = subjectTweets.get(subjectTweets.size() - 1);
 		this.feed.addTweet(tweet);
 	}

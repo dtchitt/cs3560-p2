@@ -8,6 +8,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.plaf.DimensionUIResource;
 import java.awt.GridBagConstraints;
 import java.awt.Color;
@@ -203,9 +205,26 @@ public class UserControlPanel extends JPanel {
 		layout.setConstraints(this.feedArea, constraints);
 		this.feedArea.setBackground(Color.WHITE);
 		this.feedArea.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
+		this.feedArea.getModel().addListDataListener(new ListDataListener() {
+
+			@Override
+			public void intervalAdded(ListDataEvent e) {
+				setTimeStampLabel();
+			}
+
+			@Override
+			public void intervalRemoved(ListDataEvent e) {
+				setTimeStampLabel();
+			}
+
+			@Override
+			public void contentsChanged(ListDataEvent e) {
+				setTimeStampLabel();
+			}
+		});
 
 		this.add(this.feedArea);
-	
+
 	}
 
 	private void buildTimeStampLabel(GridBagLayout layout, GridBagConstraints constraints, User user) {
@@ -213,21 +232,14 @@ public class UserControlPanel extends JPanel {
 		constraints.gridx = 0;
 
 		this.timeStampLabel = new JLabel("");
-		//this.timeStampLabel.setText(this.setTimeUpdateText());
-
-		Timer timer = new Timer();
-		timer.schedule(new TimerTask() {
-
-			@Override
-			public void run() {
-				timeStampLabel.setText("Created @ " + user.getCreationDate() + "    Updated @ " + user.getUpdateDate());
-				System.out.println("ya");
-			}
-			
-		}, 0, 100);
+		this.setTimeStampLabel();
 
 		layout.setConstraints(this.timeStampLabel, constraints);
 		this.timeStampLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		this.add(this.timeStampLabel);
+	}
+
+	private void setTimeStampLabel() {
+		timeStampLabel.setText("Created @ " + user.getCreationDate() + "    Updated @ " + user.getUpdateDate());
 	}
 }
