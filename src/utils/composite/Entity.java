@@ -63,7 +63,10 @@ public abstract class Entity extends DefaultMutableTreeNode implements Visitable
 		return this.timeStamp.getCreationDate();
 	}
 
-	//TODO instead of using this to get node name figure out a better way
+	public String getUpdateDate() {
+		return this.timeStamp.getUpdateDate();
+	}
+
 	@Override
 	public String toString() {
 		return this.getUniqueID();

@@ -2,35 +2,35 @@ package src.ui.user;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import javax.swing.plaf.DimensionUIResource;
 import java.awt.GridBagConstraints;
 import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import src.controllers.AdminController;
 import src.utils.composite.User;
 
-/**
- * Okay honestly I was rushing and this is really messy, sorry
- * This is pretty much an all in one for user UI and logic.
- * The control panel is what actually observes users feeds so it knows when to
- * update
- */
 public class UserControlPanel extends JPanel {
 	private User user;
 	private JTextArea following;
 	private JList<String> feedArea;
+	private JLabel timeStampLabel;
 
 	public UserControlPanel(User user) {
 		super();
 		this.user = user;
 
-		int height = 400;
+		int height = 420;
 		this.setMinimumSize(new DimensionUIResource(420, height));
 
 		GridBagLayout layout = new GridBagLayout();
@@ -38,7 +38,8 @@ public class UserControlPanel extends JPanel {
 				(int) (height * 0.07),
 				(int) (height * 0.40),
 				(int) (height * 0.13),
-				(int) (height * 0.40)
+				(int) (height * 0.40),
+				(int) (height * 0.07),
 		};
 
 		this.setLayout(layout);
@@ -53,6 +54,7 @@ public class UserControlPanel extends JPanel {
 		this.buildFollowUserSection(layout, constraints);
 		this.buildFollowingView(layout, constraints);
 		this.buildTweetControls(layout, constraints);
+		this.buildTimeStampLabel(layout, constraints, user);
 		this.buildNewsFeed(layout, constraints);
 	}
 
@@ -203,5 +205,29 @@ public class UserControlPanel extends JPanel {
 		this.feedArea.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1, true));
 
 		this.add(this.feedArea);
+	
+	}
+
+	private void buildTimeStampLabel(GridBagLayout layout, GridBagConstraints constraints, User user) {
+		constraints.gridy = 4;
+		constraints.gridx = 0;
+
+		this.timeStampLabel = new JLabel("");
+		//this.timeStampLabel.setText(this.setTimeUpdateText());
+
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				timeStampLabel.setText("Created @ " + user.getCreationDate() + "    Updated @ " + user.getUpdateDate());
+				System.out.println("ya");
+			}
+			
+		}, 0, 100);
+
+		layout.setConstraints(this.timeStampLabel, constraints);
+		this.timeStampLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		this.add(this.timeStampLabel);
 	}
 }

@@ -87,11 +87,11 @@ public class User extends Entity implements Subject, Observer {
 	 * @return the added tweet
 	 */
 	public Tweet addTweet(String msg) {
+		this.setUpdateStamp();
 		Tweet tweet = new Tweet(msg, this);
 		this.tweets.add(tweet);
 		this.feed.addTweet(tweet);
 		this.notifyObservers();
-		this.setUpdateStamp();
 		this.lastUpdate = this.getUpdateStamp();
 
 		return tweet;
